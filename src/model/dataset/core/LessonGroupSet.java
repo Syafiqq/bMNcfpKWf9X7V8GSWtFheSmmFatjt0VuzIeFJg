@@ -1,6 +1,6 @@
 package model.dataset.core;
 
-/**
+/*
  * This <Skripsi_003> project in package <model.dataset.core> created by :
  * Name         : syafiq
  * Date / Time  : 16 May 2016, 7:07 PM.
@@ -13,7 +13,7 @@ public class LessonGroupSet
     public int[] lessons;
     public int[] local_sks_distribution;
 
-    public LessonGroupSet(int classroom_size, int lesson_size, int sks_distribution_size)
+    public LessonGroupSet(int classroom_size, int lesson_size)
     {
         this.classrooms = new int[classroom_size];
         this.lessons = new int[lesson_size];
