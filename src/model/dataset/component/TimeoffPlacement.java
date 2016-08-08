@@ -3,7 +3,7 @@ package model.dataset.component;
 import java.util.Arrays;
 import model.helper.IntHList;
 
-/**
+/*
  * This <Skripsi_003> project in package <model.dataset.component> created by :
  * Name         : syafiq
  * Date / Time  : 05 May 2016, 6:43 PM.
@@ -12,7 +12,7 @@ import model.helper.IntHList;
  */
 public class TimeoffPlacement
 {
-    /**
+    /*
      * Global Important Variable
      *
      * @param placement = Time-off
@@ -63,7 +63,6 @@ public class TimeoffPlacement
     {
         this.placement[day_index][period_index].add(lesson);
         return this.placement[day_index][period_index].counter == 0;
-        //return (this.placement[day_index][period_index] += lesson) == lesson;
     }
 
     public boolean isNotTheSameDay(int day, int[] link)

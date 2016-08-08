@@ -2,7 +2,7 @@ package model.pso.core;
 
 import model.dataset.component.ScheduleShufflingProperties;
 
-/**
+/*
  * This <Skripsi_003> project in package <model.pso.component> created by :
  * Name         : syafiq
  * Date / Time  : 25 May 2016, 8:55 PM.

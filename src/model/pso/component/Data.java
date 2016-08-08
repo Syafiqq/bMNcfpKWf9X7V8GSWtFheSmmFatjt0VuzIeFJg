@@ -1,6 +1,6 @@
 package model.pso.component;
 
-/**
+/*
  * This <Skripsi_003> project in package <model.pso.component> created by :
  * Name         : syafiq
  * Date / Time  : 25 May 2016, 7:33 PM.

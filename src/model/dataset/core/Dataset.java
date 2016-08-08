@@ -1,20 +1,20 @@
 package model.dataset.core;
 
-/**
+/*
  * This <Skripsi_003> project in package <model.dataset> created by :
  * Name         : syafiq
  * Date / Time  : 05 May 2016, 4:50 PM.
  * Email        : syafiq.rezpector@gmail.com
  * Github       : syafiqq
  */
-public class Dataset<TTimeoff, TLesson>
+public class Dataset<Timeoff, Lesson>
 {
-    /**
+    /*
      * Nomenclature :
      * <p>
      * SubType :
-     * TTimeoff = Time-off
-     * TLesson = Lesson
+     * Timeoff = Time-off
+     * Lesson = Lesson
      * <p>
      * Global Helper Variable :
      * school : School
@@ -27,14 +27,14 @@ public class Dataset<TTimeoff, TLesson>
      * lessons : Lessons
      */
 
-    public final int        school;
-    public       int[]      active_days;
-    public       int[]      active_periods;
-    public       TTimeoff[] classes;
-    public       TTimeoff[] classrooms;
-    public       TTimeoff[] lecturers;
-    public       TTimeoff[] subjects;
-    public       TLesson[]  lessons;
+    public final int       school;
+    public       int[]     active_days;
+    public       int[]     active_periods;
+    public       Timeoff[] classes;
+    public       Timeoff[] classrooms;
+    public       Timeoff[] lecturers;
+    public       Timeoff[] subjects;
+    public       Lesson[]  lessons;
 
     public Dataset(final int school)
     {

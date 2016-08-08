@@ -7,16 +7,16 @@ import model.database.DBProperties;
 import model.dataset.component.Lesson;
 import model.dataset.component.Timeoff;
 
-/**
+/*
  * This <Skripsi_003> project in package <model.data> created by :
  * Name         : syafiq
  * Date / Time  : 05 May 2016, 4:30 PM.
  * Email        : syafiq.rezpector@gmail.com
  * Github       : syafiqq
  */
-public abstract class DatasetBuilder<TDataset extends Dataset<? extends Timeoff, ? extends Lesson>, TDatasetConverter extends DatasetConverter<?>>
+public abstract class DatasetBuilder<Dataset extends model.dataset.core.Dataset<? extends Timeoff, ? extends Lesson>, DatasetConverter extends model.dataset.core.DatasetConverter<?>>
 {
-    /**
+    /*
      * Nomenclature :
      * <p>
      * SubType :
@@ -29,13 +29,13 @@ public abstract class DatasetBuilder<TDataset extends Dataset<? extends Timeoff,
      * decoder = Decode Database Index to Array Index {Array Index    -> Database Index}
      */
 
-    protected final TDataset          dataset;
-    protected final TDatasetConverter encoder;
-    protected final TDatasetConverter decoder;
-    protected final DBComponent       db_component;
+    protected final Dataset          dataset;
+    protected final DatasetConverter encoder;
+    protected final DatasetConverter decoder;
+    protected final DBComponent      db_component;
 
 
-    public DatasetBuilder(TDataset dataset, TDatasetConverter encoder, TDatasetConverter decoder)
+    public DatasetBuilder(Dataset dataset, DatasetConverter encoder, DatasetConverter decoder)
     {
         this.dataset = dataset;
         this.encoder = encoder;
@@ -66,30 +66,36 @@ public abstract class DatasetBuilder<TDataset extends Dataset<? extends Timeoff,
     {
         try
         {
-            assert this.db_component.connection != null;
             this.db_component.connection.close();
+        }
+        catch(SQLException ignored)
+        {
+        }
+        finally
+        {
             this.db_component.connection = null;
         }
+        try
+        {
+            this.db_component.statement.close();
+        }
         catch(SQLException ignored)
         {
         }
-        try
+        finally
         {
-            assert this.db_component.statement != null;
-            this.db_component.statement.close();
             this.db_component.statement = null;
         }
-        catch(SQLException ignored)
-        {
-        }
         try
         {
-            assert this.db_component.result_set != null;
             this.db_component.result_set.close();
-            this.db_component.result_set = null;
         }
         catch(SQLException ignored)
         {
+        }
+        finally
+        {
+            this.db_component.result_set = null;
         }
     }
 
@@ -122,17 +128,17 @@ public abstract class DatasetBuilder<TDataset extends Dataset<? extends Timeoff,
         }
     }
 
-    public TDataset getDataset()
+    public Dataset getDataset()
     {
         return this.dataset;
     }
 
-    public TDatasetConverter getEncoder()
+    public DatasetConverter getEncoder()
     {
         return this.encoder;
     }
 
-    public TDatasetConverter getDecoder()
+    public DatasetConverter getDecoder()
     {
         return this.decoder;
     }

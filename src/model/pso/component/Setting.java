@@ -1,9 +1,6 @@
 package model.pso.component;
 
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-
-/**
+/*
  * This <Skripsi_003> project in package <model.pso.component> created by :
  * Name         : syafiq
  * Date / Time  : 25 May 2016, 8:16 PM.
@@ -14,16 +11,21 @@ public class Setting
 {
     private final static Setting ourInstance = new Setting();
 
-    public final Random random;
-    public int    MAX_PARTICLES = 0;
-    public int    MAX_EPOCHS    = 0;
-    public double bloc          = 0.0;
-    public double bglob         = 0.0;
-    public double brand         = 0.0;
+    public int max_particle = 0;
+    public int max_epoch    = 0;
+
+    public double bloc_min  = 0.0;
+    public double bloc_max  = 0;
+    public double bglob_min = 0.0;
+    public double bglob_max = 0;
+    public double brand_min = 0.0;
+    public double brand_max = 0;
+
+    public int total_core;
 
     private Setting()
     {
-        this.random = ThreadLocalRandom.current();
+
     }
 
     public static Setting getInstance()

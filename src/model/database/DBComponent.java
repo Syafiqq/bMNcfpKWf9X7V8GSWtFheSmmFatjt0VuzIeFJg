@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-/**
+/*
  * This <Skripsi_003> project in package <model.database> created by :
  * Name         : syafiq
  * Date / Time  : 05 May 2016, 6:35 PM.
@@ -13,8 +13,7 @@ import java.sql.ResultSet;
  */
 public class DBComponent
 {
-
-    /**
+    /*
      * Nomenclature
      * <p>
      * Global Important Variable :

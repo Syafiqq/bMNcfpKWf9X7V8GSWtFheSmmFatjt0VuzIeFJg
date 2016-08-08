@@ -2,7 +2,7 @@ package main;
 
 import model.database.DBProperties;
 
-/**
+/*
  * This <Skripsi_003> project in package <PACKAGE_NAME> created by :
  * Name         : syafiq
  * Date / Time  : 05 May 2016, 4:38 PM.

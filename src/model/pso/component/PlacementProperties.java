@@ -3,7 +3,7 @@ package model.pso.component;
 import model.dataset.component.TimeoffPlacement;
 import model.helper.IntHList;
 
-/**
+/*
  * This <Skripsi_003> project in package <model.pso.component> created by :
  * Name         : syafiq
  * Date / Time  : 16 June 2016, 9:46 AM.
@@ -12,13 +12,13 @@ import model.helper.IntHList;
  */
 public class PlacementProperties
 {
-    public  TimeoffPlacement[] lecture_placement;
-    public  TimeoffPlacement[] class_placement;
-    public  IntHList           lecture_fill;
-    public  IntHList           class_fill;
-    private int                classroom;
-    private int                day;
-    private int                period;
+    public final  TimeoffPlacement[] lecture_placement;
+    public final  TimeoffPlacement[] class_placement;
+    public final  IntHList           lecture_fill;
+    public final  IntHList           class_fill;
+    private final int                classroom;
+    private final int                day;
+    private final int                period;
 
     public PlacementProperties(int lecture_total, int class_total, int classroom_total, int day_total, int period_total, int active_classroom)
     {
@@ -42,11 +42,11 @@ public class PlacementProperties
     public void resetPlacement()
     {
         int counter_reset = -1;
-        for(int counter_classroom = -1, classroom_size = this.classroom; ++counter_classroom < classroom_size; )
+        for(int counter_classroom = -1; ++counter_classroom < this.classroom; )
         {
-            for(int counter_day = -1, day_size = this.day; ++counter_day < day_size; )
+            for(int counter_day = -1; ++counter_day < this.day; )
             {
-                for(int counter_period = -1, period_size = this.period; ++counter_period < period_size; )
+                for(int counter_period = -1; ++counter_period < this.period; )
                 {
                     ++counter_reset;
                     try
@@ -70,14 +70,5 @@ public class PlacementProperties
         }
         this.lecture_fill.reset();
         this.class_fill.reset();
-/*        for(TimeoffPlacement placement : this.lecture_placement)
-        {
-            placement.resetPlacement();
-        }
-
-        for(TimeoffPlacement placement : this.class_placement)
-        {
-            placement.resetPlacement();
-        }*/
     }
 }

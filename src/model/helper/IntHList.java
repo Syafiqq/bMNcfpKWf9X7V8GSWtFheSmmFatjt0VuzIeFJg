@@ -1,6 +1,6 @@
 package model.helper;
 
-/**
+/*
  * This <Skripsi_003> project in package <model.helper> created by :
  * Name         : syafiq
  * Date / Time  : 16 June 2016, 11:00 AM.
@@ -11,7 +11,6 @@ public class IntHList
 {
     public final int[]   list;
     public       int     counter;
-    private      boolean empty;
 
     public IntHList(int size)
     {
