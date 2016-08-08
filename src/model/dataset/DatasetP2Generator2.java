@@ -10,7 +10,7 @@ import model.dataset.core.Dataset1;
 import model.dataset.core.DatasetBuilder;
 import model.dataset.core.DatasetConverter;
 
-/**
+/*
  * This <Skripsi_003> project in package <model.dataset.test> created by :
  * Name         : syafiq
  * Date / Time  : 08 May 2016, 5:29 PM.
@@ -47,7 +47,7 @@ public class DatasetP2Generator2 extends DatasetBuilder<Dataset1<Timeoff, Lesson
             int classroom_time_off_size = db_component.result_set.getInt("count");
 
 
-            /** Query for all lessons in the specific school id*/
+            /* Query for all lessons in the specific school id*/
             query = "SELECT COUNT(`lesson`.`id`) AS 'count', SUM(`lesson`.`count` - 1) AS 'extra', SUM(`lesson`.`sks` * `count`) AS 'total' FROM `lesson` LEFT OUTER JOIN `subject` ON `lesson`.`subject` = `subject`.`id` WHERE `subject`.`school` = ?";
             db_component.statement = db_component.connection.prepareStatement(query);
             db_component.statement.setInt(1, dataset.school);
@@ -57,12 +57,12 @@ public class DatasetP2Generator2 extends DatasetBuilder<Dataset1<Timeoff, Lesson
             int lesson_extra_size = db_component.result_set.getInt("extra");
             int lesson_capacity   = db_component.result_set.getInt("total");
             int schedule_capacity = dataset.active_days.length * dataset.active_periods.length * dataset.classrooms.length;
-            /** Array length = schedule capacity - lessons capacity - num of classrooms when placement is not available + Total Lesson in the database + lessons extra where lessons count more than one  +  num of classrooms when placement is not available*/
+            /* Array length = schedule capacity - lessons capacity - num of classrooms when placement is not available + Total Lesson in the database + lessons extra where lessons count more than one  +  num of classrooms when placement is not available*/
             int size                 = schedule_capacity - lesson_capacity - classroom_time_off_size + lesson_size + lesson_extra_size;
             int lesson_extra_counter = lesson_size;
 
 
-            /** Query for all lessons in the specific school id*/
+            /* Query for all lessons in the specific school id*/
             query = "SELECT `lesson`.`id`, `lesson`.`subject`, COALESCE(`lesson`.`lecture`, 0) AS 'lecture', `lesson`.`sks`, `lesson`.`count`, `lesson`.`class`, COUNT(`lesson_available_classroom`.`id`) AS 'total' FROM `lesson` LEFT OUTER JOIN `subject` ON `lesson`.`subject` = `subject`.`id` LEFT OUTER JOIN `lesson_available_classroom` ON `lesson_available_classroom`.`lesson` = `lesson`.`id` WHERE `subject`.`school` = ? GROUP BY `lesson`.`id` ORDER BY `lesson`.`id` ASC";
             db_component.statement = db_component.connection.prepareStatement(query);
             db_component.statement.setInt(1, dataset.school);
@@ -131,7 +131,7 @@ public class DatasetP2Generator2 extends DatasetBuilder<Dataset1<Timeoff, Lesson
             DBComponent                                db_component = super.db_component;
             Dataset1<Timeoff, Lesson>                  dataset      = super.dataset;
             DatasetConverter<Int2IntLinkedOpenHashMap> encoder      = super.encoder;
-            /** Query for all lessons in the specific school id according to lessons*/
+            /* Query for all lessons in the specific school id according to lessons*/
             String query = "SELECT `lesson`.`id`, `lesson_available_classroom`.`classroom` FROM `lesson` LEFT OUTER JOIN `subject` ON `lesson`.`subject` = `subject`.`id` LEFT OUTER JOIN `lesson_available_classroom` ON `lesson_available_classroom`.`lesson` = `lesson`.`id` WHERE `subject`.`school` = ? ORDER BY `lesson`.`id`, `lesson_available_classroom`.`classroom` ASC";
             db_component.statement = db_component.connection.prepareStatement(query);
             db_component.statement.setInt(1, dataset.school);
@@ -182,7 +182,7 @@ public class DatasetP2Generator2 extends DatasetBuilder<Dataset1<Timeoff, Lesson
             Dataset1<Timeoff, Lesson>                  dataset      = super.dataset;
             DatasetConverter<Int2IntLinkedOpenHashMap> encoder      = super.encoder;
             DatasetConverter<Int2IntLinkedOpenHashMap> decoder      = super.decoder;
-            /** Query for all subject in the specific school id according to lessons*/
+            /* Query for all subject in the specific school id according to lessons*/
             String query = "SELECT COUNT(DISTINCT `lesson`.`subject`) AS 'count' FROM `lesson` LEFT OUTER JOIN `subject` ON `lesson`.`subject` = `subject`.`id` WHERE `subject`.`school` = ?";
             db_component.statement = db_component.connection.prepareStatement(query);
             db_component.statement.setInt(1, dataset.school);
@@ -190,7 +190,7 @@ public class DatasetP2Generator2 extends DatasetBuilder<Dataset1<Timeoff, Lesson
             db_component.result_set.next();
             int size = db_component.result_set.getInt("count");
 
-            /** Query for all subject in the specific school id according to lessons*/
+            /* Query for all subject in the specific school id according to lessons*/
             query = "SELECT DISTINCT `lesson`.`subject` AS 'id' FROM `lesson` LEFT OUTER JOIN `subject` ON `lesson`.`subject` = `subject`.`id` WHERE `subject`.`school` = ? ORDER BY `lesson`.`subject` ASC";
             db_component.statement = db_component.connection.prepareStatement(query);
             db_component.statement.setInt(1, dataset.school);
@@ -207,7 +207,7 @@ public class DatasetP2Generator2 extends DatasetBuilder<Dataset1<Timeoff, Lesson
                 decoder.subjects.put(result_set_counter, db_component.result_set.getInt("id"));
             }
 
-            /** Query for all subject in the specific school id according to lessons*/
+            /* Query for all subject in the specific school id according to lessons*/
             query = "SELECT `subject_timeoff`.`subject`, `subject_timeoff`.`day`, `subject_timeoff`.`period`, `availability`.`value` FROM `subject_timeoff` LEFT OUTER JOIN `availability` ON `availability`.`id` = `subject_timeoff`.`availability` WHERE `subject_timeoff`.`subject` IN (SELECT DISTINCT `lesson`.`subject` FROM `lesson` LEFT OUTER JOIN `subject` ON `lesson`.`subject` = `subject`.`id` WHERE `subject`.`school` = ?) ORDER BY `subject_timeoff`.`subject`, `subject_timeoff`.`day`, `subject_timeoff`.`period` ASC";
             db_component.statement = db_component.connection.prepareStatement(query);
             db_component.statement.setInt(1, dataset.school);
@@ -235,7 +235,7 @@ public class DatasetP2Generator2 extends DatasetBuilder<Dataset1<Timeoff, Lesson
             Dataset1<Timeoff, Lesson>                  dataset      = super.dataset;
             DatasetConverter<Int2IntLinkedOpenHashMap> encoder      = super.encoder;
             DatasetConverter<Int2IntLinkedOpenHashMap> decoder      = super.decoder;
-            /** Query for all lecture in the specific school id according to lessons*/
+            /* Query for all lecture in the specific school id according to lessons*/
             String query = "SELECT COUNT(DISTINCT `lesson`.`lecture`) AS 'count' FROM `lesson` LEFT OUTER JOIN `lecture` ON `lesson`.`lecture` = `lecture`.`id` WHERE `lecture`.`school` = ?";
             db_component.statement = db_component.connection.prepareStatement(query);
             db_component.statement.setInt(1, dataset.school);
@@ -243,7 +243,7 @@ public class DatasetP2Generator2 extends DatasetBuilder<Dataset1<Timeoff, Lesson
             db_component.result_set.next();
             int size = db_component.result_set.getInt("count");
 
-            /** Query for all lecture in the specific school id according to lessons*/
+            /* Query for all lecture in the specific school id according to lessons*/
             query = "SELECT DISTINCT `lesson`.`lecture` AS 'id' FROM `lesson` LEFT OUTER JOIN `lecture` ON `lesson`.`lecture` = `lecture`.`id` WHERE `lecture`.`school` = ? ORDER BY `lesson`.`lecture` ASC";
             db_component.statement = db_component.connection.prepareStatement(query);
             db_component.statement.setInt(1, dataset.school);
@@ -260,7 +260,7 @@ public class DatasetP2Generator2 extends DatasetBuilder<Dataset1<Timeoff, Lesson
                 decoder.lecturers.put(result_set_counter, db_component.result_set.getInt("id"));
             }
 
-            /** Query for all lecture in the specific school id according to lessons*/
+            /* Query for all lecture in the specific school id according to lessons*/
             query = "SELECT `lecture_timeoff`.`lecture`, `lecture_timeoff`.`day`, `lecture_timeoff`.`period`, `availability`.`value` FROM `lecture_timeoff` LEFT OUTER JOIN `availability` ON `availability`.`id` = `lecture_timeoff`.`availability` WHERE `lecture_timeoff`.`lecture` IN (SELECT DISTINCT `lesson`.`lecture` FROM `lesson` LEFT OUTER JOIN `lecture` ON `lesson`.`lecture` = `lecture`.`id` WHERE `lecture`.`school` = ?) ORDER BY `lecture_timeoff`.`lecture`, `lecture_timeoff`.`day`, `lecture_timeoff`.`period` ASC";
             db_component.statement = db_component.connection.prepareStatement(query);
             db_component.statement.setInt(1, dataset.school);
@@ -288,7 +288,7 @@ public class DatasetP2Generator2 extends DatasetBuilder<Dataset1<Timeoff, Lesson
             Dataset1<Timeoff, Lesson>                  ddatasets    = super.dataset;
             DatasetConverter<Int2IntLinkedOpenHashMap> encoder      = super.encoder;
             DatasetConverter<Int2IntLinkedOpenHashMap> decoder      = super.decoder;
-            /** Query for all classrooms in the specific school id according to lessons*/
+            /* Query for all classrooms in the specific school id according to lessons*/
             String query = "SELECT COUNT(DISTINCT `lesson_available_classroom`.`classroom`) AS 'count' FROM `lesson_available_classroom` RIGHT OUTER JOIN `lesson` ON `lesson_available_classroom`.`lesson` = `lesson`.`id` WHERE `lesson_available_classroom`.`classroom` IN (SELECT `classroom`.`id` FROM `classroom` WHERE `classroom`.`school` = ?)";
             db_component.statement = db_component.connection.prepareStatement(query);
             db_component.statement.setInt(1, ddatasets.school);
@@ -296,7 +296,7 @@ public class DatasetP2Generator2 extends DatasetBuilder<Dataset1<Timeoff, Lesson
             db_component.result_set.next();
             int size = db_component.result_set.getInt("count");
 
-            /** Query for all classrooms in the specific school id according to lessons*/
+            /* Query for all classrooms in the specific school id according to lessons*/
             query = "SELECT DISTINCT `lesson_available_classroom`.`classroom` AS 'id' FROM `lesson_available_classroom` RIGHT OUTER JOIN `lesson` ON `lesson_available_classroom`.`lesson` = `lesson`.`id` WHERE `lesson_available_classroom`.`classroom` IN (SELECT `classroom`.`id` FROM `classroom` WHERE `classroom`.`school` = ?) ORDER BY `lesson_available_classroom`.`classroom` ASC";
             db_component.statement = db_component.connection.prepareStatement(query);
             db_component.statement.setInt(1, ddatasets.school);
@@ -313,7 +313,7 @@ public class DatasetP2Generator2 extends DatasetBuilder<Dataset1<Timeoff, Lesson
                 decoder.classrooms.put(result_set_counter, db_component.result_set.getInt("id"));
             }
 
-            /** Query for all classrooms in the specific school id according to lessons*/
+            /* Query for all classrooms in the specific school id according to lessons*/
             query = "SELECT `classroom_timeoff`.`classroom`, `classroom_timeoff`.`day`, `classroom_timeoff`.`period`, `availability`.`value` FROM `classroom_timeoff` LEFT OUTER JOIN `availability` ON `availability`.`id` = `classroom_timeoff`.`availability` WHERE `classroom_timeoff`.`classroom` IN (SELECT DISTINCT `lesson_available_classroom`.`classroom` FROM `lesson_available_classroom` WHERE `lesson_available_classroom`.`classroom` IN (SELECT `classroom`.`id` FROM `classroom` WHERE `classroom`.`school` = ?)) ORDER BY `classroom_timeoff`.`classroom`, `classroom_timeoff`.`day`, `classroom_timeoff`.`period` ASC";
             db_component.statement = db_component.connection.prepareStatement(query);
             db_component.statement.setInt(1, ddatasets.school);
@@ -341,7 +341,7 @@ public class DatasetP2Generator2 extends DatasetBuilder<Dataset1<Timeoff, Lesson
             Dataset1<Timeoff, Lesson>                  dataset      = super.dataset;
             DatasetConverter<Int2IntLinkedOpenHashMap> encoder      = super.encoder;
             DatasetConverter<Int2IntLinkedOpenHashMap> decoder      = super.decoder;
-            /** Query for all class in the specific school id according to lessons*/
+            /* Query for all class in the specific school id according to lessons*/
             String query = "SELECT COUNT(DISTINCT `lesson`.`class`) AS 'count' FROM `lesson` LEFT OUTER JOIN `class` ON `lesson`.`class` = `class`.`id` WHERE `class`.`school` = ?";
             db_component.statement = db_component.connection.prepareStatement(query);
             db_component.statement.setInt(1, dataset.school);
@@ -349,7 +349,7 @@ public class DatasetP2Generator2 extends DatasetBuilder<Dataset1<Timeoff, Lesson
             db_component.result_set.next();
             int size = db_component.result_set.getInt("count");
 
-            /** Query for all class in the specific school id according to lessons*/
+            /* Query for all class in the specific school id according to lessons*/
             query = "SELECT DISTINCT `lesson`.`class` AS 'id' FROM `lesson` LEFT OUTER JOIN `class` ON `lesson`.`class` = `class`.`id` WHERE `class`.`school` = ? ORDER BY `lesson`.`class` ASC";
             db_component.statement = db_component.connection.prepareStatement(query);
             db_component.statement.setInt(1, dataset.school);
@@ -366,7 +366,7 @@ public class DatasetP2Generator2 extends DatasetBuilder<Dataset1<Timeoff, Lesson
                 decoder.classes.put(result_set_counter, db_component.result_set.getInt("id"));
             }
 
-            /** Query for all class in the specific school id according to lessons*/
+            /* Query for all class in the specific school id according to lessons*/
             query = "SELECT `class_timeoff`.`class`, `class_timeoff`.`day`, `class_timeoff`.`period`, `availability`.`value` FROM `class_timeoff` LEFT OUTER JOIN `availability` ON `availability`.`id` = `class_timeoff`.`availability` WHERE `class_timeoff`.`class` IN (SELECT DISTINCT `lesson`.`class` FROM `lesson` LEFT OUTER JOIN `class` ON `lesson`.`class` = `class`.`id` WHERE `class`.`school` = ?) ORDER BY `class_timeoff`.`class`, `class_timeoff`.`day`, `class_timeoff`.`period` ASC";
             db_component.statement = db_component.connection.prepareStatement(query);
             db_component.statement.setInt(1, dataset.school);
