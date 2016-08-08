@@ -13,7 +13,7 @@ import model.pso.core.PSOP2;
 import org.junit.Test;
 
 /*
- * This <Skripsi_003> project in package <model.pso.core.test> created by : 
+ * This <Skripsi_003> project in package <model.pso.core.test> created by :
  * Name         : syafiq
  * Date / Time  : 08 August 2016, 3:47 PM.
  * Email        : syafiq.rezpector@gmail.com
