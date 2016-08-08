@@ -32,8 +32,8 @@ public class PSOP2TestSwarmInitialization
         setting.bglob = 0.5;
         setting.bloc = 0.5;
         setting.brand = 0.5;
-        setting.MAX_PARTICLES = 10;
-        setting.MAX_EPOCHS = 10;
+        setting.max_particle = 10;
+        setting.max_epoch = 10;
 
         Main.getMyDatabaseAccount();
         final Dataset2<Timeoff, Lesson>                  dataset    = new Dataset2<>(1);
@@ -46,7 +46,7 @@ public class PSOP2TestSwarmInitialization
         this.pso = new PSOP2(setting, gen);
         this.pso.initializeSwarm();
 
-        this.total_particle = setting.MAX_PARTICLES;
+        this.total_particle = setting.max_particle;
     }
 
     @Test public void SwarmInitializationObjectReference()

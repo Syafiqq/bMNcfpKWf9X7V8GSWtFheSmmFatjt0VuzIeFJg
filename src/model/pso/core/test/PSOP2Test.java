@@ -45,8 +45,8 @@ public class PSOP2Test
         setting.bglob = 0.5;
         setting.bloc = 0.5;
         setting.brand = 0.5;
-        setting.MAX_PARTICLES = 10;
-        setting.MAX_EPOCHS = 10;
+        setting.max_particle = 10;
+        setting.max_epoch = 10;
 
         Main.getMyDatabaseAccount();
         Dataset2<Timeoff, Lesson>                  dataset    = new Dataset2<>(1);
@@ -67,8 +67,8 @@ public class PSOP2Test
         setting.bglob = 0.5;
         setting.bloc = 0.5;
         setting.brand = 0.5;
-        setting.MAX_PARTICLES = 10;
-        setting.MAX_EPOCHS = 10;
+        setting.max_particle = 10;
+        setting.max_epoch = 10;
 
         Main.getMyDatabaseAccount();
         Dataset2<Timeoff, Lesson>                  dataset    = new Dataset2<>(1);
@@ -92,8 +92,8 @@ public class PSOP2Test
         setting.bglob = 0.5;
         setting.bloc = 0.5;
         setting.brand = 0.5;
-        setting.MAX_PARTICLES = 10;
-        setting.MAX_EPOCHS = 10;
+        setting.max_particle = 10;
+        setting.max_epoch = 10;
 
         Main.getMyDatabaseAccount();
         final Dataset2<Timeoff, Lesson>                  dataset    = new Dataset2<>(1);
@@ -106,8 +106,8 @@ public class PSOP2Test
         PSOP2 pso = new PSOP2(setting, gen);
 
         System.out.printf("Setting : @see model.pso.component.Setting\n");
-        System.out.printf("\t%-30s : %s\n", "Max Particle", String.valueOf(pso.setting.MAX_PARTICLES));
-        System.out.printf("\t%-30s : %s\n", "Max Epoch", String.valueOf(pso.setting.MAX_EPOCHS));
+        System.out.printf("\t%-30s : %s\n", "Max Particle", String.valueOf(pso.setting.max_particle));
+        System.out.printf("\t%-30s : %s\n", "Max Epoch", String.valueOf(pso.setting.max_epoch));
         System.out.printf("\t%-30s : %s\n", "B-loc", String.format("%-6.2g", pso.setting.bloc));
         System.out.printf("\t%-30s : %s\n", "B-glob", String.format("%-6.2g", pso.setting.bglob));
         System.out.printf("\t%-30s : %s\n", "B-rand", String.format("%-6.2g", pso.setting.brand));
@@ -151,8 +151,8 @@ public class PSOP2Test
         setting.bglob = 0.5;
         setting.bloc = 0.5;
         setting.brand = 0.5;
-        setting.MAX_PARTICLES = 10;
-        setting.MAX_EPOCHS = 10;
+        setting.max_particle = 10;
+        setting.max_epoch = 10;
 
         Main.getMyDatabaseAccount();
         final Dataset2<Timeoff, Lesson>                  dataset    = new Dataset2<>(1);
@@ -174,8 +174,8 @@ public class PSOP2Test
         setting.bglob = 0.5;
         setting.bloc = 0.5;
         setting.brand = 0.5;
-        setting.MAX_PARTICLES = 10;
-        setting.MAX_EPOCHS = 10;
+        setting.max_particle = 10;
+        setting.max_epoch = 10;
 
         Main.getMyDatabaseAccount();
         final Dataset2<Timeoff, Lesson>                  dataset    = new Dataset2<>(1);
@@ -188,7 +188,7 @@ public class PSOP2Test
         PSOP2 pso = new PSOP2(setting, gen);
         pso.initializeSwarm();
 
-        for(int i = -1, is = setting.MAX_PARTICLES; ++i < is; )
+        for(int i = -1, is = setting.max_particle; ++i < is; )
         {
             System.out.printf("Particle [%d]\n", i);
             System.out.println(pso.particles[i].toString(0));
@@ -203,8 +203,8 @@ public class PSOP2Test
         setting.bglob = 0.5;
         setting.bloc = 0.5;
         setting.brand = 0.5;
-        setting.MAX_PARTICLES = 10;
-        setting.MAX_EPOCHS = 10;
+        setting.max_particle = 10;
+        setting.max_epoch = 10;
 
         Main.getMyDatabaseAccount();
         final Dataset2<Timeoff, Lesson>                  dataset    = new Dataset2<>(1);
@@ -217,7 +217,7 @@ public class PSOP2Test
         PSOP2 pso = new PSOP2(setting, gen);
         pso.initializeSwarm();
 
-        for(int i = -1, is = setting.MAX_PARTICLES; ++i < is; )
+        for(int i = -1, is = setting.max_particle; ++i < is; )
         {
             System.out.printf("Particle [%d]\n", i);
             System.out.printf("%s\n", (String.format("%s\t%s : \n%s", "", "Data", pso.particles[i].data.toString(1))));
@@ -231,8 +231,8 @@ public class PSOP2Test
         setting.bglob = 0.5;
         setting.bloc = 0.5;
         setting.brand = 0.5;
-        setting.MAX_PARTICLES = 10;
-        setting.MAX_EPOCHS = 1;
+        setting.max_particle = 10;
+        setting.max_epoch = 1;
 
         Main.getMyDatabaseAccount();
         final Dataset2<Timeoff, Lesson>                  dataset    = new Dataset2<>(1);
@@ -256,8 +256,8 @@ public class PSOP2Test
         setting.bglob = 0.5;
         setting.bloc = 0.5;
         setting.brand = 0.5;
-        setting.MAX_PARTICLES = 10;
-        setting.MAX_EPOCHS = 1;
+        setting.max_particle = 10;
+        setting.max_epoch = 1;
 
         Main.getMyDatabaseAccount();
         final Dataset2<Timeoff, Lesson>                  dataset    = new Dataset2<>(1);
@@ -279,8 +279,8 @@ public class PSOP2Test
         setting.bglob = 0.5;
         setting.bloc = 0.5;
         setting.brand = 0.5;
-        setting.MAX_PARTICLES = 1;
-        setting.MAX_EPOCHS = 1;
+        setting.max_particle = 1;
+        setting.max_epoch = 1;
 
         Main.getMyDatabaseAccount();
         final Dataset2<Timeoff, Lesson>                  dataset    = new Dataset2<>(1);
@@ -308,8 +308,8 @@ public class PSOP2Test
         setting.bglob = 0.5;
         setting.bloc = 0.5;
         setting.brand = 0.5;
-        setting.MAX_PARTICLES = 10;
-        setting.MAX_EPOCHS = 1;
+        setting.max_particle = 10;
+        setting.max_epoch = 1;
 
         Main.getMyDatabaseAccount();
         final Dataset2<Timeoff, Lesson>                  dataset    = new Dataset2<>(1);
@@ -323,7 +323,7 @@ public class PSOP2Test
         pso.initializeSwarm();
         for(int i = 0, is = 10000; ++i < is; )
         {
-            for(int j = -1; ++j < setting.MAX_PARTICLES; )
+            for(int j = -1; ++j < setting.max_particle; )
             {
                 pso.particles[j].placement_properties.resetPlacement();
             }
@@ -336,8 +336,8 @@ public class PSOP2Test
         setting.bglob = 0.5;
         setting.bloc = 0.5;
         setting.brand = 0.5;
-        setting.MAX_PARTICLES = 10;
-        setting.MAX_EPOCHS = 10;
+        setting.max_particle = 10;
+        setting.max_epoch = 10;
 
         Main.getMyDatabaseAccount();
         final Dataset2<Timeoff, Lesson>                  dataset    = new Dataset2<>(1);
@@ -359,8 +359,8 @@ public class PSOP2Test
         setting.bglob = 0.5;
         setting.bloc = 0.5;
         setting.brand = 0.5;
-        setting.MAX_PARTICLES = 10;
-        setting.MAX_EPOCHS = 1;
+        setting.max_particle = 10;
+        setting.max_epoch = 1;
 
         Main.getMyDatabaseAccount();
         final Dataset2<Timeoff, Lesson>                  dataset    = new Dataset2<>(1);
@@ -389,8 +389,8 @@ public class PSOP2Test
         setting.bglob = 0.5;
         setting.bloc = 0.5;
         setting.brand = 0.5;
-        setting.MAX_PARTICLES = 10;
-        setting.MAX_EPOCHS = 1;
+        setting.max_particle = 10;
+        setting.max_epoch = 1;
 
         Main.getMyDatabaseAccount();
         final Dataset2<Timeoff, Lesson>                  dataset    = new Dataset2<>(1);
@@ -417,8 +417,8 @@ public class PSOP2Test
         setting.bglob = 0.5;
         setting.bloc = 0.5;
         setting.brand = 0.5;
-        setting.MAX_PARTICLES = 1;
-        setting.MAX_EPOCHS = 1;
+        setting.max_particle = 1;
+        setting.max_epoch = 1;
 
         Main.getMyDatabaseAccount();
         final Dataset2<Timeoff, Lesson>                  dataset    = new Dataset2<>(1);
@@ -488,8 +488,8 @@ public class PSOP2Test
         setting.bglob = 0.5;
         setting.bloc = 0.5;
         setting.brand = 0.5;
-        setting.MAX_PARTICLES = 10;
-        setting.MAX_EPOCHS = 1;
+        setting.max_particle = 10;
+        setting.max_epoch = 1;
 
         Main.getMyDatabaseAccount();
         final Dataset2<Timeoff, Lesson>                  dataset    = new Dataset2<>(1);
@@ -513,8 +513,8 @@ public class PSOP2Test
         setting.bglob = 0.5;
         setting.bloc = 0.5;
         setting.brand = 0.5;
-        setting.MAX_PARTICLES = 1;
-        setting.MAX_EPOCHS = 1;
+        setting.max_particle = 1;
+        setting.max_epoch = 1;
 
         Main.getMyDatabaseAccount();
         final Dataset2<Timeoff, Lesson>                  dataset    = new Dataset2<>(1);
@@ -546,8 +546,8 @@ public class PSOP2Test
         setting.bglob = 0.5;
         setting.bloc = 0.5;
         setting.brand = 0.5;
-        setting.MAX_PARTICLES = 1;
-        setting.MAX_EPOCHS = 1;
+        setting.max_particle = 1;
+        setting.max_epoch = 1;
 
         Main.getMyDatabaseAccount();
         final Dataset2<Timeoff, Lesson>                  dataset    = new Dataset2<>(1);
@@ -583,8 +583,8 @@ public class PSOP2Test
         setting.bglob = 0.5;
         setting.bloc = 0.5;
         setting.brand = 0.5;
-        setting.MAX_PARTICLES = 20;
-        setting.MAX_EPOCHS = 10000;
+        setting.max_particle = 20;
+        setting.max_epoch = 10000;
 
         Main.getMyDatabaseAccount();
         final Dataset2<Timeoff, Lesson>                  dataset    = new Dataset2<>(1);

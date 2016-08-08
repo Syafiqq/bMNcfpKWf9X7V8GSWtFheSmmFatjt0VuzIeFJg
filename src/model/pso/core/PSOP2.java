@@ -92,7 +92,7 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
 
         this.encoder = generator.getEncoder();
         this.decoder = generator.getDecoder();
-        super.particles = new ParticleP2[this.setting.MAX_PARTICLES];
+        super.particles = new ParticleP2[this.setting.max_particle];
         super.cEpoch = 0;
         super.gBest = Data.newInstance(this.lesson_pool.length);
 
@@ -102,8 +102,8 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
         }
 
         this.max_core_allowed = 3;
-        this.max_pool_allowed = this.setting.MAX_PARTICLES - this.max_core_allowed < 1 ? 1 : this.setting.MAX_PARTICLES - this.max_core_allowed;
-        this.thread_queue = new ArrayBlockingQueue<>((this.setting.MAX_PARTICLES - this.max_core_allowed) < 1 ? 1 : (this.setting.MAX_PARTICLES - this.max_core_allowed));
+        this.max_pool_allowed = this.setting.max_particle - this.max_core_allowed < 1 ? 1 : this.setting.max_particle - this.max_core_allowed;
+        this.thread_queue = new ArrayBlockingQueue<>((this.setting.max_particle - this.max_core_allowed) < 1 ? 1 : (this.setting.max_particle - this.max_core_allowed));
 
         //for Logger
         /*this.logger = LogManager.getLogger(PSOP2.class);
@@ -174,11 +174,11 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
          * */
         //ArrayBlockingQueue<Runnable> tmpQueue = new ArrayBlockingQueue<Runnable>()
 
-        //ThreadPoolExecutor executor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), setting.MAX_PARTICLES, 10, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
-        //ThreadPoolExecutor executor = new ThreadPoolExecutor(3, setting.MAX_PARTICLES, 10, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(this.setting.MAX_PARTICLES), new ThreadPoolExecutor.CallerRunsPolicy());
-        //ThreadPoolExecutor executor = new ThreadPoolExecutor(3, setting.MAX_PARTICLES, 50, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(setting.MAX_PARTICLES));
+        //ThreadPoolExecutor executor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), setting.max_particle, 10, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
+        //ThreadPoolExecutor executor = new ThreadPoolExecutor(3, setting.max_particle, 10, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(this.setting.max_particle), new ThreadPoolExecutor.CallerRunsPolicy());
+        //ThreadPoolExecutor executor = new ThreadPoolExecutor(3, setting.max_particle, 50, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(setting.max_particle));
         ThreadPoolExecutor executor = new ThreadPoolExecutor(this.max_core_allowed, this.max_pool_allowed, 10, TimeUnit.MILLISECONDS, this.thread_queue);
-        //ThreadPoolExecutor executor = new ThreadPoolExecutor(setting.MAX_PARTICLES, setting.MAX_PARTICLES, 10, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
+        //ThreadPoolExecutor executor = new ThreadPoolExecutor(setting.max_particle, setting.max_particle, 10, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
         //executor.allowCoreThreadTimeOut(true);
         //ExecutorService executor = Executors.newCachedThreadPool();
         //executor.execute();
@@ -1112,7 +1112,7 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
 
     @Override public boolean isConditionSatisfied()
     {
-        return super.cEpoch == setting.MAX_EPOCHS;
+        return super.cEpoch == setting.max_epoch;
     }
 
     @Override public void initializeSwarm()
@@ -1123,7 +1123,7 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
             classroom += pool.classrooms.length;
         }
 
-        for(int particle_number = -1, particle_size = this.setting.MAX_PARTICLES; ++particle_number < particle_size; )
+        for(int particle_number = -1, particle_size = this.setting.max_particle; ++particle_number < particle_size; )
         {
             RepairProperties[] repair_properties = new RepairProperties[this.lesson_pool.length];
             for(int pool_index = -1, pool_size = this.lesson_pool.length; ++pool_index < pool_size; )

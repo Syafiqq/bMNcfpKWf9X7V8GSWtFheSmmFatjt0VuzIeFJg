@@ -31,8 +31,8 @@ public class PSOP2TestFoFitness
         setting.bglob = 0.5;
         setting.bloc = 0.5;
         setting.brand = 0.5;
-        setting.MAX_PARTICLES = 10;
-        setting.MAX_EPOCHS = 10;
+        setting.max_particle = 10;
+        setting.max_epoch = 10;
 
         Main.getMyDatabaseAccount();
         final Dataset2<Timeoff, Lesson>                  dataset    = new Dataset2<>(1);
