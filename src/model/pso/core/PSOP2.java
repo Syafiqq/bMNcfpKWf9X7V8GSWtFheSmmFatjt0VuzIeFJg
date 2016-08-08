@@ -250,7 +250,7 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
         }
     }
 
-    @Override
+    @SuppressWarnings("ConstantConditions") @Override
     public void calculateFitness(ParticleP2 data)
     {
         final TimeoffPlacement[] lecture_placement = data.placement_properties.lecture_placement;
@@ -295,7 +295,7 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                                 double fitness_1 = (.02 * (this.subjects[lesson.subject].timeoff[day_index][period_index]));
                                 double fitness_2 = (1 * (lesson.lecture == -1 ? 10 : (this.lecturers[lesson.lecture].timeoff[day_index][period_index])));
                                 double fitness_3 = (.04 * (this.classes[lesson.clazz].timeoff[day_index][period_index]));
-                                double fitness_4 = (0.001 * period); // classroom timeoff
+                                double fitness_4 = (0.001 * period);
                                 double fitness_5 = (5 * (lesson.lecture == -1 ? 10 : (lecture_placement[lesson.lecture].putPlacementIfAbset(day_index, period_index, lesson_id[lesson_counter]) ? 10 : 0.1)));
                                 double fitness_6 = (5 * (lesson.clazz == -1 ? 10 : (class_placement[lesson.clazz].putPlacementIfAbset(day_index, period_index, lesson_id[lesson_counter]) ? 10 : 0.1)));
                                 double fitness_7 = (3 * (lesson.link.length == 0 ? 10 : class_placement[lesson.clazz].isNotTheSameDay(day_index, lesson.link) ? 10 : 0.1));
