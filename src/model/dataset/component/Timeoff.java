@@ -2,7 +2,7 @@ package model.dataset.component;
 
 import java.util.Arrays;
 
-/**
+/*
  * This <Skripsi_003> project in package <model.dataset.component> created by :
  * Name         : syafiq
  * Date / Time  : 05 May 2016, 6:43 PM.
@@ -11,7 +11,7 @@ import java.util.Arrays;
  */
 public class Timeoff
 {
-    /**
+    /*
      * Global Important Variable
      *
      * @param placement = Time-off
