@@ -2,7 +2,7 @@ package model.custom.it.unimi.dsi.fastutil.ints;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 
-/**
+/*
  * This <Skripsi_003> project in package <model.custom.it.unimi.dsi.fastutil.ints> created by :
  * Name         : syafiq
  * Date / Time  : 18 May 2016, 3:31 PM.
