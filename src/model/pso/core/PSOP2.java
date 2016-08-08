@@ -44,23 +44,23 @@ import org.jetbrains.annotations.NotNull;
 public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements ScheduleRandomable<Position[]>
 {
     //Setting
-    private final Setting setting;
+    public final Setting setting;
 
     //Dataset
-    private final int       school;
-    private final int[]     active_days;
-    private final int[]     active_periods;
-    private final Timeoff[] classes;
-    private final Timeoff[] classrooms;
-    private final Timeoff[] lecturers;
-    private final Timeoff[] subjects;
-    private final Lesson[]  lessons;
-    private final int[][][] classroom_available_time;
-    private final int[]     sks_distribution;
+    public final int       school;
+    public final int[]     active_days;
+    public final int[]     active_periods;
+    public final Timeoff[] classes;
+    public final Timeoff[] classrooms;
+    public final Timeoff[] lecturers;
+    public final Timeoff[] subjects;
+    public final Lesson[]  lessons;
+    public final int[][][] classroom_available_time;
+    public final int[]     sks_distribution;
 
     //Working Set
-    private final LessonGroupSet[]            lesson_set;
-    private final LessonPoolSet[]             lesson_pool;
+    public final  LessonGroupSet[]            lesson_set;
+    public final  LessonPoolSet[]             lesson_pool;
     private final ScheduleShufflingProperties shuffling_properties;
 
     //Converter

@@ -28,23 +28,23 @@ public class PSOP2Test
     @Test public void testSettingOnly()
     {
         Setting setting = Setting.getInstance();
-        setting.bglob = 0.5;
-        setting.bloc = 0.5;
-        setting.brand = 0.5;
+        setting.bglob_min = 0.5;
+        setting.bloc_min = 0.5;
+        setting.brand_min = 0.5;
 
 
         PSOP2 pso = new PSOP2(setting, null);
-        Assert.assertEquals(0.5, pso.setting.bglob, 0.1);
-        Assert.assertEquals(0.5, pso.setting.bloc, 0.1);
-        Assert.assertEquals(0.5, pso.setting.brand, 0.1);
+        Assert.assertEquals(0.5, pso.setting.bglob_min, 0.1);
+        Assert.assertEquals(0.5, pso.setting.bloc_min, 0.1);
+        Assert.assertEquals(0.5, pso.setting.brand_min, 0.1);
     }
 
     @Test public void testDatasetGenerator()
     {
         Setting setting = Setting.getInstance();
-        setting.bglob = 0.5;
-        setting.bloc = 0.5;
-        setting.brand = 0.5;
+        setting.bglob_min = 0.5;
+        setting.bloc_min = 0.5;
+        setting.brand_min = 0.5;
         setting.max_particle = 10;
         setting.max_epoch = 10;
 
@@ -64,9 +64,9 @@ public class PSOP2Test
     @Test public void testGBestInstantiation()
     {
         Setting setting = Setting.getInstance();
-        setting.bglob = 0.5;
-        setting.bloc = 0.5;
-        setting.brand = 0.5;
+        setting.bglob_min = 0.5;
+        setting.bloc_min = 0.5;
+        setting.brand_min = 0.5;
         setting.max_particle = 10;
         setting.max_epoch = 10;
 
@@ -89,9 +89,9 @@ public class PSOP2Test
     @Test public void testConstructor()
     {
         Setting setting = Setting.getInstance();
-        setting.bglob = 0.5;
-        setting.bloc = 0.5;
-        setting.brand = 0.5;
+        setting.bglob_min = 0.5;
+        setting.bloc_min = 0.5;
+        setting.brand_min = 0.5;
         setting.max_particle = 10;
         setting.max_epoch = 10;
 
@@ -108,9 +108,9 @@ public class PSOP2Test
         System.out.printf("Setting : @see model.pso.component.Setting\n");
         System.out.printf("\t%-30s : %s\n", "Max Particle", String.valueOf(pso.setting.max_particle));
         System.out.printf("\t%-30s : %s\n", "Max Epoch", String.valueOf(pso.setting.max_epoch));
-        System.out.printf("\t%-30s : %s\n", "B-loc", String.format("%-6.2g", pso.setting.bloc));
-        System.out.printf("\t%-30s : %s\n", "B-glob", String.format("%-6.2g", pso.setting.bglob));
-        System.out.printf("\t%-30s : %s\n", "B-rand", String.format("%-6.2g", pso.setting.brand));
+        System.out.printf("\t%-30s : %s\n", "B-loc", String.format("%-6.2g", pso.setting.bloc_min));
+        System.out.printf("\t%-30s : %s\n", "B-glob", String.format("%-6.2g", pso.setting.bglob_min));
+        System.out.printf("\t%-30s : %s\n", "B-rand", String.format("%-6.2g", pso.setting.brand_min));
         System.out.printf("End Of Setting : @see model.pso.component.Setting\n");
         System.out.println();
         System.out.printf("Data Set\n");
@@ -148,9 +148,9 @@ public class PSOP2Test
     @Test public void testSwarmInitialization()
     {
         Setting setting = Setting.getInstance();
-        setting.bglob = 0.5;
-        setting.bloc = 0.5;
-        setting.brand = 0.5;
+        setting.bglob_min = 0.5;
+        setting.bloc_min = 0.5;
+        setting.brand_min = 0.5;
         setting.max_particle = 10;
         setting.max_epoch = 10;
 
@@ -171,9 +171,9 @@ public class PSOP2Test
     @Test public void testSwarmInitializationAllParticle()
     {
         Setting setting = Setting.getInstance();
-        setting.bglob = 0.5;
-        setting.bloc = 0.5;
-        setting.brand = 0.5;
+        setting.bglob_min = 0.5;
+        setting.bloc_min = 0.5;
+        setting.brand_min = 0.5;
         setting.max_particle = 10;
         setting.max_epoch = 10;
 
@@ -200,9 +200,9 @@ public class PSOP2Test
     @Test public void testSwarmInitializationAllParticleData()
     {
         Setting setting = Setting.getInstance();
-        setting.bglob = 0.5;
-        setting.bloc = 0.5;
-        setting.brand = 0.5;
+        setting.bglob_min = 0.5;
+        setting.bloc_min = 0.5;
+        setting.brand_min = 0.5;
         setting.max_particle = 10;
         setting.max_epoch = 10;
 
@@ -228,9 +228,9 @@ public class PSOP2Test
     @Test public void testUpdateSwarmFitnessWithBenchmark()
     {
         Setting setting = Setting.getInstance();
-        setting.bglob = 0.5;
-        setting.bloc = 0.5;
-        setting.brand = 0.5;
+        setting.bglob_min = 0.5;
+        setting.bloc_min = 0.5;
+        setting.brand_min = 0.5;
         setting.max_particle = 10;
         setting.max_epoch = 1;
 
@@ -253,9 +253,9 @@ public class PSOP2Test
     @Test public void testUpdateSwarmFitnessWithoutBenchmark()
     {
         Setting setting = Setting.getInstance();
-        setting.bglob = 0.5;
-        setting.bloc = 0.5;
-        setting.brand = 0.5;
+        setting.bglob_min = 0.5;
+        setting.bloc_min = 0.5;
+        setting.brand_min = 0.5;
         setting.max_particle = 10;
         setting.max_epoch = 1;
 
@@ -276,9 +276,9 @@ public class PSOP2Test
     @Test public void testUpdateSwarmFitnessExecutionTime()
     {
         Setting setting = Setting.getInstance();
-        setting.bglob = 0.5;
-        setting.bloc = 0.5;
-        setting.brand = 0.5;
+        setting.bglob_min = 0.5;
+        setting.bloc_min = 0.5;
+        setting.brand_min = 0.5;
         setting.max_particle = 1;
         setting.max_epoch = 1;
 
@@ -305,9 +305,9 @@ public class PSOP2Test
     @Test public void testResetPlacementWithBenchmark()
     {
         Setting setting = Setting.getInstance();
-        setting.bglob = 0.5;
-        setting.bloc = 0.5;
-        setting.brand = 0.5;
+        setting.bglob_min = 0.5;
+        setting.bloc_min = 0.5;
+        setting.brand_min = 0.5;
         setting.max_particle = 10;
         setting.max_epoch = 1;
 
@@ -333,9 +333,9 @@ public class PSOP2Test
     @Test public void testGBestAfterSwarmInitialization()
     {
         Setting setting = Setting.getInstance();
-        setting.bglob = 0.5;
-        setting.bloc = 0.5;
-        setting.brand = 0.5;
+        setting.bglob_min = 0.5;
+        setting.bloc_min = 0.5;
+        setting.brand_min = 0.5;
         setting.max_particle = 10;
         setting.max_epoch = 10;
 
@@ -356,9 +356,9 @@ public class PSOP2Test
     @Test public void testUpdateAllParticlePbestWithBenchmark()
     {
         Setting setting = Setting.getInstance();
-        setting.bglob = 0.5;
-        setting.bloc = 0.5;
-        setting.brand = 0.5;
+        setting.bglob_min = 0.5;
+        setting.bloc_min = 0.5;
+        setting.brand_min = 0.5;
         setting.max_particle = 10;
         setting.max_epoch = 1;
 
@@ -386,9 +386,9 @@ public class PSOP2Test
     @Test public void testEvaluateAllParticleWithBenchmark()
     {
         Setting setting = Setting.getInstance();
-        setting.bglob = 0.5;
-        setting.bloc = 0.5;
-        setting.brand = 0.5;
+        setting.bglob_min = 0.5;
+        setting.bloc_min = 0.5;
+        setting.brand_min = 0.5;
         setting.max_particle = 10;
         setting.max_epoch = 1;
 
@@ -414,9 +414,9 @@ public class PSOP2Test
     @Test public void testRepairWithoutBenchmark()
     {
         Setting setting = Setting.getInstance();
-        setting.bglob = 0.5;
-        setting.bloc = 0.5;
-        setting.brand = 0.5;
+        setting.bglob_min = 0.5;
+        setting.bloc_min = 0.5;
+        setting.brand_min = 0.5;
         setting.max_particle = 1;
         setting.max_epoch = 1;
 
@@ -474,7 +474,7 @@ public class PSOP2Test
         {
             pso.updateAllParticlePBest();
             pso.assignGBest();
-            pso.particles[0].calculateVelocity(pso.gBest);
+            pso.particles[0].calculateVelocity(pso.gBest, pso.cEpoch, setting.max_epoch);
             pso.particles[0].updateData();
             pso.repairData(pso.particles[0]);
             pso.calculateFitness(pso.particles[0]);
@@ -485,9 +485,9 @@ public class PSOP2Test
     @Test public void testAssignGBestWithBenchmark()
     {
         Setting setting = Setting.getInstance();
-        setting.bglob = 0.5;
-        setting.bloc = 0.5;
-        setting.brand = 0.5;
+        setting.bglob_min = 0.5;
+        setting.bloc_min = 0.5;
+        setting.brand_min = 0.5;
         setting.max_particle = 10;
         setting.max_epoch = 1;
 
@@ -510,9 +510,9 @@ public class PSOP2Test
     @Test public void testClassroomPlacementWithStabilityChecking()
     {
         Setting setting = Setting.getInstance();
-        setting.bglob = 0.5;
-        setting.bloc = 0.5;
-        setting.brand = 0.5;
+        setting.bglob_min = 0.5;
+        setting.bloc_min = 0.5;
+        setting.brand_min = 0.5;
         setting.max_particle = 1;
         setting.max_epoch = 1;
 
@@ -543,9 +543,9 @@ public class PSOP2Test
     @Test public void testClassroomPlacementAfterRepairWithStabilityChecking()
     {
         Setting setting = Setting.getInstance();
-        setting.bglob = 0.5;
-        setting.bloc = 0.5;
-        setting.brand = 0.5;
+        setting.bglob_min = 0.5;
+        setting.bloc_min = 0.5;
+        setting.brand_min = 0.5;
         setting.max_particle = 1;
         setting.max_epoch = 1;
 
@@ -568,7 +568,7 @@ public class PSOP2Test
         {
             pso.updateAllParticlePBest();
             pso.assignGBest();
-            pso.particles[0].calculateVelocity(pso.gBest);
+            pso.particles[0].calculateVelocity(pso.gBest, pso.cEpoch, setting.max_epoch);
             pso.particles[0].updateData();
             pso.repairData(pso.particles[0]);
             pso.calculateFitness(pso.particles[0]);
@@ -580,9 +580,9 @@ public class PSOP2Test
     @Test public void testSystemWithBenchmark()
     {
         Setting setting = Setting.getInstance();
-        setting.bglob = 0.5;
-        setting.bloc = 0.5;
-        setting.brand = 0.5;
+        setting.bglob_min = 0.5;
+        setting.bloc_min = 0.5;
+        setting.brand_min = 0.5;
         setting.max_particle = 20;
         setting.max_epoch = 10000;
 

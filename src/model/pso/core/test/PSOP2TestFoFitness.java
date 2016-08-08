@@ -28,9 +28,9 @@ public class PSOP2TestFoFitness
     @Before public void Initialization()
     {
         Setting setting = Setting.getInstance();
-        setting.bglob = 0.5;
-        setting.bloc = 0.5;
-        setting.brand = 0.5;
+        setting.bglob_min = 0.5;
+        setting.bloc_min = 0.5;
+        setting.brand_min = 0.5;
         setting.max_particle = 10;
         setting.max_epoch = 10;
 
