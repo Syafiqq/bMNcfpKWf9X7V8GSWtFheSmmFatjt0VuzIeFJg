@@ -18,17 +18,6 @@ import model.dataset.core.DatasetConverter;
  * Github       : syafiqq
  */
 
-/*
- * Upcoming notes
- * 1. Continue P1                               <=> @Deprecated
- * 2. Change General Gain                       <=> @see DatasetP2Generator2
- * 3. Remove not available placement capacity     <=> @see DatasetP2Generator      @see DatasetP2Generator1
- * 4. Give same index for null lessons           <=> @see DatasetP2Generator3
- * 5. Clustering Lesson.
- * 6. Generate With Simple Lesson Generator     <=> @see DatasetP2Generator1
- * query = "SELECT `lessons`.`id`, COUNT(`lesson_available_classroom`.`classrooms`) AS 'cls_count', GROUP_CONCAT(`lesson_available_classroom`.`classrooms`) as 'available_classrooms' FROM `lessons` LEFT OUTER JOIN `lesson_available_classroom` ON `lesson_available_classroom`.`lessons` = `lessons`.`id` LEFT OUTER JOIN `subject` ON `subject`.`id` = `lessons`.`subject` WHERE `subject`.`school` = 1 GROUP BY `lessons`.`id` ORDER BY cls_count ASC, available_classrooms ASC, `lessons`.`id` ASC";
- * query = "SELECT `available_classrooms` AS 'classrooms', GROUP_CONCAT(`id` ORDER BY `id` SEPARATOR ' ') AS 'lessons' FROM(SELECT `lessons`.`id`, GROUP_CONCAT(`lesson_available_classroom`.`classrooms` ORDER BY `lesson_available_classroom`.`classrooms` SEPARATOR ' ') as 'available_classrooms' FROM `lessons` LEFT OUTER JOIN `lesson_available_classroom` ON `lesson_available_classroom`.`lessons` = `lessons`.`id` LEFT OUTER JOIN `subject` ON `subject`.`id` = `lessons`.`subject` WHERE `subject`.`school` = 1 GROUP BY `lessons`.`id` ORDER BY COUNT(`lesson_available_classroom`.`classrooms`) ASC, available_classrooms ASC, `lessons`.`id` ASC) AS `dafuq` GROUP BY `available_classrooms`";
- */
 public class DatasetP2Generator extends DatasetBuilder<Dataset<Timeoff, Lesson>, DatasetConverter<Int2IntLinkedOpenHashMap>>
 {
     public DatasetP2Generator(Dataset<Timeoff, Lesson> dataset, DatasetConverter<Int2IntLinkedOpenHashMap> encoder, DatasetConverter<Int2IntLinkedOpenHashMap> decoder)
