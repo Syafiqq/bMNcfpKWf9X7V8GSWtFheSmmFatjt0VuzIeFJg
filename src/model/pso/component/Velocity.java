@@ -2,7 +2,7 @@ package model.pso.component;
 
 import model.helper.HList;
 
-/**
+/*
  * This <Skripsi_003> project in package <model.pso.component> created by :
  * Name         : syafiq
  * Date / Time  : 25 May 2016, 6:44 PM.
@@ -19,10 +19,9 @@ public class Velocity extends HList<Transposition>
     public Velocity(int expected_size)
     {
         super(new Transposition[expected_size]);
-        final Transposition[] transpositions = super.list;
         for(int counter = -1; ++counter < expected_size; )
         {
-            transpositions[counter] = new Transposition(0, 0);
+            super.list[counter] = new Transposition(0, 0);
         }
     }
 
@@ -192,7 +191,7 @@ public class Velocity extends HList<Transposition>
             {
                 velocity.reset();
             }
-            else if(Math.abs(coefficient) < 1.0)
+            else if(Math.abs(coefficient) <= 1.0)
             {
                 if(coefficient < 0.0)
                 {
@@ -245,23 +244,20 @@ public class Velocity extends HList<Transposition>
             final int destination = destinations[counter_destination];
             if(destination != 0)
             {
-                velocity.set(counter_destination, temp_container[destination]);
+                if(counter_destination != temp_container[destination])
+                {
+                    velocity.set(counter_destination, temp_container[destination]);
 
-                /**
-                 * Swap Mimic
-                 * */
-                mimic[temp_container[destination]] = mimic[counter_destination];
-                //final int mimic_temp = mimic[counter_destination];
-                //mimic[counter_destination] = mimic[temp_container[destination]];
-                //mimic[temp_container[destination]] = mimic_temp;
+                    /*
+                     * Swap Mimic
+                     * */
+                    mimic[temp_container[destination]] = mimic[counter_destination];
 
-                /**
-                 * Swap Temp Container
-                 * */
-                temp_container[mimic[counter_destination]] = temp_container[destination];
-                //final int container_temp = temp_container[mimic[counter_destination]];
-                //temp_container[mimic[counter_destination]] = temp_container[mimic_temp];
-                //temp_container[mimic_temp] = container_temp;
+                    /*
+                     * Swap Temp Container
+                     * */
+                    temp_container[mimic[counter_destination]] = temp_container[destination];
+                }
             }
         }
     }

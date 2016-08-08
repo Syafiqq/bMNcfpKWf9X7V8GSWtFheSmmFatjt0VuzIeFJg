@@ -8,7 +8,7 @@ import model.dataset.component.Timeoff;
 import model.dataset.core.Dataset;
 import model.dataset.core.DatasetConverter;
 
-/**
+/*
  * This <Skripsi_003> project in package <model.dataset> created by :
  * Name         : syafiq
  * Date / Time  : 08 May 2016, 4:08 PM.
@@ -16,7 +16,7 @@ import model.dataset.core.DatasetConverter;
  * Github       : syafiqq
  */
 
-/**
+/*
  * Dataset P2 Generator With Simple Lesson Generator
  */
 public class DatasetP2Generator1 extends DatasetP2Generator
@@ -33,7 +33,7 @@ public class DatasetP2Generator1 extends DatasetP2Generator
             DBComponent                                db_component = super.db_component;
             Dataset<Timeoff, Lesson>                   dataset      = super.dataset;
             DatasetConverter<Int2IntLinkedOpenHashMap> encoder      = super.encoder;
-            /** Query for all lessons in the specific school id according to lessons*/
+            /* Query for all lessons in the specific school id according to lessons*/
             String query = "SELECT `lesson`.`id`, `lesson_available_classroom`.`classroom` FROM `lesson` LEFT OUTER JOIN `subject` ON `lesson`.`subject` = `subject`.`id` LEFT OUTER JOIN `lesson_available_classroom` ON `lesson_available_classroom`.`lesson` = `lesson`.`id` WHERE `subject`.`school` = ? ORDER BY `lesson`.`id`, `lesson_available_classroom`.`classroom` ASC";
             db_component.statement = db_component.connection.prepareStatement(query);
             db_component.statement.setInt(1, dataset.school);

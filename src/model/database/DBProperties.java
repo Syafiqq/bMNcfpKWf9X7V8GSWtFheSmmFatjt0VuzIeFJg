@@ -1,6 +1,6 @@
 package model.database;
 
-/**
+/*
  * This <Skripsi_003> project in package <model.database> created by :
  * Name         : syafiq
  * Date / Time  : 05 May 2016, 4:22 PM.

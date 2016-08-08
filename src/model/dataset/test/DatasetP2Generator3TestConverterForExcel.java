@@ -34,11 +34,11 @@ public class DatasetP2Generator3TestConverterForExcel
     @Before public void initialization()
     {
         this.setting = Setting.getInstance();
-        setting.bglob = 0.5;
-        setting.bloc = 0.5;
-        setting.brand = 0.5;
-        setting.MAX_PARTICLES = 10;
-        setting.MAX_EPOCHS = 1;
+        setting.bglob_min = 0.5;
+        setting.bloc_min = 0.5;
+        setting.brand_min = 0.5;
+        setting.max_particle = 10;
+        setting.max_epoch = 1;
 
         this.dataset = new Dataset2<>(1);
         this.workingset = new WorkingSet();

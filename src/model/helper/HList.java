@@ -1,6 +1,6 @@
 package model.helper;
 
-/**
+/*
  * This <Skripsi_003> project in package <model.pso.helper> created by :
  * Name         : syafiq
  * Date / Time  : 21 May 2016, 5:03 PM.

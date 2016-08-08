@@ -2,7 +2,7 @@ package model.pso.component;
 
 import java.util.Arrays;
 
-/**
+/*
  * This <Skripsi_003> project in package <model.pso.component> created by :
  * Name         : syafiq
  * Date / Time  : 21 May 2016, 7:24 PM.
