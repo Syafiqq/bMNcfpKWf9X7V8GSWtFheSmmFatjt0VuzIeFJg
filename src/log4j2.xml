@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<Configuration status="warn" name="PSOP2" packages="model.pso.core">
+    <Appenders>
+        <RollingFile name="RollingFile" fileName="/home/syafiq/Documents/JetBrains/IntellijIDEA/Skripsi_003/logs/repair.log"
+                     filePattern="logs/repair-%d{MM-dd-yyyy:HH-mm-ss}.log" immediateFlush="true">
+            <PatternLayout>
+                <Pattern>%m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="debug">
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+    </Loggers>
+</Configuration>-->
+<Configuration status="warn" name="PSOP2" packages="model.pso.core">
+    <Appenders>
+        <File name="MyFile" fileName="/home/syafiq/Documents/JetBrains/IntellijIDEA/Skripsi_003/logs/repair.log"
+              append="false">
+            <PatternLayout>
+                <Pattern>%m%n</Pattern>
+            </PatternLayout>
+        </File>
+    </Appenders>
+    <Loggers>
+        <Root level="debug">
+            <AppenderRef ref="MyFile"/>
+        </Root>
+    </Loggers>
+</Configuration>
