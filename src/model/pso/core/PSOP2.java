@@ -62,9 +62,9 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
     //For Repair Dump
     //private       int                                        global_pool_index_log;
     //Thread Pool Executor
-    private int                          max_core_allowed;
-    private int                          max_pool_allowed;
-    private ArrayBlockingQueue<Runnable> thread_queue;
+    private       int                                        max_core_allowed;
+    private       int                                        max_pool_allowed;
+    private       ArrayBlockingQueue<Runnable>               thread_queue;
 
     public PSOP2(Setting setting, DatasetP2Generator3 generator)
     {
