@@ -1,6 +1,7 @@
 package model.pso.component;
 
 import java.util.Comparator;
+import java.util.Random;
 import model.dataset.component.ScheduleShufflingProperties;
 import model.helper.IntHList;
 import model.pso.core.ScheduleRandomable;
@@ -18,6 +19,7 @@ public class ParticleP2 extends ParticleBuilder<Data, Velocity[]>
     public static final Comparator<ParticleP2> particleDataFitnessAscComparator   = (p1, p2) -> (int) (p1.data.fitness - p2.data.fitness);
 
     public final Setting             setting;
+    public final Random              random;
     public final VelocityProperties  velocity_properties;
     public final PlacementProperties placement_properties;
     public final RepairProperties[]  repair_properties;
@@ -34,14 +36,14 @@ public class ParticleP2 extends ParticleBuilder<Data, Velocity[]>
         for(int counter_position = -1, position_size = super.data.positions.length; ++counter_position < position_size; )
         {
             this.lesson_conflicts[counter_position] = new IntHList(super.data.positions[counter_position].position.length);
-            //int velocity_bound = super.data.positions[counter_position].position.length * (int) Math.ceil(this.setting.brand_max);
-            int velocity_bound = super.data.positions[counter_position].position.length * (int) Math.ceil(this.setting.brand);
+            int velocity_bound = super.data.positions[counter_position].position.length * (int) Math.ceil(this.setting.brand_max);
             velocity_bound = velocity_bound == 0 ? super.data.positions[counter_position].position.length : velocity_bound;
             super.velocity[counter_position] = new Velocity(velocity_bound);
         }
         this.velocity_properties = new VelocityProperties(builder, randomable, setting, super.data.positions);
         this.placement_properties = placement_properties;
         this.repair_properties = repair_properties;
+        this.random = new Random();
     }
 
     @Override public void assignPBest()
@@ -67,9 +69,9 @@ public class ParticleP2 extends ParticleBuilder<Data, Velocity[]>
         property.initializeDloc(super.data);
         property.initializeDglob(super.data);
 
-        random_coefficient = this.setting.random.nextDouble();
+        random_coefficient = this.random.nextDouble();
         //constants_coefficient = ((this.setting.bloc_max - this.setting.bloc_min) * (cEpoch * 1f / max_epoch)) + this.setting.bloc_min;
-        constants_coefficient = this.setting.bloc;
+        constants_coefficient = this.setting.bloc_min;
         for(int counter_data = -1, data_size = super.data.positions.length; ++counter_data < data_size; )
         {
             Velocity.getDistance(property.velocity_temporary[counter_data], super.pBest.positions[counter_data], super.data.positions[counter_data], property.position_mimic[counter_data], property.position_container[counter_data]);
@@ -77,9 +79,9 @@ public class ParticleP2 extends ParticleBuilder<Data, Velocity[]>
             Position.update(property.dloc[counter_data], property.velocity_temporary[counter_data]);
         }
 
-        random_coefficient = this.setting.random.nextDouble();
+        random_coefficient = this.random.nextDouble();
         //constants_coefficient = this.setting.bglob_max - ((this.setting.bglob_max - this.setting.bglob_min) * (cEpoch * 1f / max_epoch));
-        constants_coefficient = this.setting.bglob;
+        constants_coefficient = this.setting.bloc_min;
         for(int counter_data = -1, data_size = super.data.positions.length; ++counter_data < data_size; )
         {
             Velocity.getDistance(property.velocity_temporary[counter_data], gBest.positions[counter_data], super.data.positions[counter_data], property.position_mimic[counter_data], property.position_container[counter_data]);
@@ -87,9 +89,9 @@ public class ParticleP2 extends ParticleBuilder<Data, Velocity[]>
             Position.update(property.dglob[counter_data], property.velocity_temporary[counter_data]);
         }
 
-        random_coefficient = this.setting.random.nextDouble();
+        random_coefficient = this.random.nextDouble();
         //constants_coefficient = this.setting.brand_max - ((this.setting.brand_max - this.setting.brand_min) * (cEpoch * 1f / max_epoch));
-        constants_coefficient = this.setting.brand;
+        constants_coefficient = this.setting.brand_min;
         for(int counter_data = -1, data_size = super.data.positions.length; ++counter_data < data_size; )
         {
             Velocity.getDistance(super.velocity[counter_data], property.prand[counter_data], super.data.positions[counter_data], property.position_mimic[counter_data], property.position_container[counter_data]);
