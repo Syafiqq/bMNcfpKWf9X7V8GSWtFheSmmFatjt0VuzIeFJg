@@ -21,9 +21,6 @@ public class Setting
     public double brand_min = 0.0;
     public double brand_max = 0;
 
-    public int inject_count = 0;
-    public int injectRange  = 0;
-
     public int total_core;
 
     private Setting()
