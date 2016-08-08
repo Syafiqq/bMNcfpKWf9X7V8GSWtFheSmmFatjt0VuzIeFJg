@@ -1,6 +1,6 @@
 package model.pso.component;
 
-/**
+/*
  * This <Skripsi_003> project in package <model.pso.component> created by :
  * Name         : syafiq
  * Date / Time  : 25 May 2016, 8:00 PM.
@@ -15,7 +15,7 @@ public abstract class ParticleBuilder<Data, Velocity>
 
     public abstract void assignPBest();
 
-    public abstract void calculateVelocity(Data gBest);
+    public abstract void calculateVelocity(final Data gBest, int cEpoch, int MAX_EPOCHS);
 
     public abstract void updateData();
 }
