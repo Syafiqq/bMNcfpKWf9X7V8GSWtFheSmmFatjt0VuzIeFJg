@@ -70,8 +70,7 @@ public class ParticleP2 extends ParticleBuilder<Data, Velocity[]>
         property.initializeDglob(super.data);
 
         random_coefficient = this.random.nextDouble();
-        //constants_coefficient = ((this.setting.bloc_max - this.setting.bloc_min) * (cEpoch * 1f / max_epoch)) + this.setting.bloc_min;
-        constants_coefficient = this.setting.bloc_min;
+        constants_coefficient = ((this.setting.bloc_max - this.setting.bloc_min) * (cEpoch * 1f / max_epoch)) + this.setting.bloc_min;
         for(int counter_data = -1, data_size = super.data.positions.length; ++counter_data < data_size; )
         {
             Velocity.getDistance(property.velocity_temporary[counter_data], super.pBest.positions[counter_data], super.data.positions[counter_data], property.position_mimic[counter_data], property.position_container[counter_data]);
@@ -80,8 +79,7 @@ public class ParticleP2 extends ParticleBuilder<Data, Velocity[]>
         }
 
         random_coefficient = this.random.nextDouble();
-        //constants_coefficient = this.setting.bglob_max - ((this.setting.bglob_max - this.setting.bglob_min) * (cEpoch * 1f / max_epoch));
-        constants_coefficient = this.setting.bglob_min;
+        constants_coefficient = this.setting.bglob_max - ((this.setting.bglob_max - this.setting.bglob_min) * (cEpoch * 1f / max_epoch));
         for(int counter_data = -1, data_size = super.data.positions.length; ++counter_data < data_size; )
         {
             Velocity.getDistance(property.velocity_temporary[counter_data], gBest.positions[counter_data], super.data.positions[counter_data], property.position_mimic[counter_data], property.position_container[counter_data]);
@@ -90,8 +88,7 @@ public class ParticleP2 extends ParticleBuilder<Data, Velocity[]>
         }
 
         random_coefficient = this.random.nextDouble();
-        //constants_coefficient = this.setting.brand_max - ((this.setting.brand_max - this.setting.brand_min) * (cEpoch * 1f / max_epoch));
-        constants_coefficient = this.setting.brand_min;
+        constants_coefficient = this.setting.brand_max - ((this.setting.brand_max - this.setting.brand_min) * (cEpoch * 1f / max_epoch));
         for(int counter_data = -1, data_size = super.data.positions.length; ++counter_data < data_size; )
         {
             Velocity.getDistance(super.velocity[counter_data], property.prand[counter_data], super.data.positions[counter_data], property.position_mimic[counter_data], property.position_container[counter_data]);
