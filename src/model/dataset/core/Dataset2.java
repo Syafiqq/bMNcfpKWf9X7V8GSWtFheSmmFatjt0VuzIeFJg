@@ -1,6 +1,6 @@
 package model.dataset.core;
 
-/**
+/*
  * This <Skripsi_003> project in package <model.dataset> created by :
  * Name         : syafiq
  * Date / Time  : 17 May 2016, 11:31 PM.
