@@ -81,7 +81,7 @@ public class ParticleP2 extends ParticleBuilder<Data, Velocity[]>
 
         random_coefficient = this.random.nextDouble();
         //constants_coefficient = this.setting.bglob_max - ((this.setting.bglob_max - this.setting.bglob_min) * (cEpoch * 1f / max_epoch));
-        constants_coefficient = this.setting.bloc_min;
+        constants_coefficient = this.setting.bglob_min;
         for(int counter_data = -1, data_size = super.data.positions.length; ++counter_data < data_size; )
         {
             Velocity.getDistance(property.velocity_temporary[counter_data], gBest.positions[counter_data], super.data.positions[counter_data], property.position_mimic[counter_data], property.position_container[counter_data]);
