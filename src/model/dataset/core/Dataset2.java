@@ -7,7 +7,7 @@ package model.dataset.core;
  * Email        : syafiq.rezpector@gmail.com
  * Github       : syafiqq
  */
-public class Dataset2<TTimeoff, TLesson> extends Dataset<TTimeoff, TLesson>
+public class Dataset2<Timeoff, Lesson> extends Dataset<Timeoff, Lesson>
 {
     public int[][][] classroom_available_time;
     public int[]     sks_distribution;
