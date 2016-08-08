@@ -28,7 +28,7 @@ public abstract class PSOOperation<Data, Velocity, Particle extends ParticleBuil
             this.assignGBest();
             for(Particle particle : this.particles)
             {
-                particle.calculateVelocity(this.gBest);
+                particle.calculateVelocity(this.gBest, this.cEpoch, Integer.MAX_VALUE);
                 particle.updateData();
                 this.repairData(particle);
                 this.calculateFitness(particle);
