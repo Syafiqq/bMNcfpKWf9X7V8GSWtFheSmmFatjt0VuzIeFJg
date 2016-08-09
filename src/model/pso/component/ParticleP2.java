@@ -51,11 +51,11 @@ public class ParticleP2 extends ParticleBuilder<Data, Velocity[]>
         if(super.data.fitness > super.pBest.fitness)
         {
             Data.replaceData(super.pBest, super.data);
-        }/*
+        }
         else if (super.data.fitness < super.pBest.fitness)
         {
             Data.replaceData(super.data, super.pBest);
-        }*/
+        }
     }
 
     @Override public void calculateVelocity(Data gBest, int cEpoch, int max_epoch)

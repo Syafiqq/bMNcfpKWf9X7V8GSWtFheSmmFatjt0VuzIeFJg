@@ -64,17 +64,17 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
     private final ScheduleShufflingProperties shuffling_properties;
 
     //Converter
-    private final DatasetConverter<Int2IntLinkedOpenHashMap> encoder;
-    private final DatasetConverter<Int2IntLinkedOpenHashMap> decoder;
+    @SuppressWarnings({"FieldCanBeLocal", "unused"}) private final DatasetConverter<Int2IntLinkedOpenHashMap> encoder;
+    @SuppressWarnings({"FieldCanBeLocal", "unused"}) private final DatasetConverter<Int2IntLinkedOpenHashMap> decoder;
 
     //Logging
-    private Logger          logger;
-    private StringBuilder[] logBuffers;
+    @SuppressWarnings("FieldCanBeLocal") private Logger          logger;
+    @SuppressWarnings("FieldCanBeLocal") private StringBuilder[] logBuffers;
 
     //Thread Pool Executor
-    private       int                                        max_core_allowed;
-    private       int                                        max_pool_allowed;
-    private       ArrayBlockingQueue<Runnable>               thread_queue;
+    private int                          max_core_allowed;
+    private int                          max_pool_allowed;
+    private ArrayBlockingQueue<Runnable> thread_queue;
 
     public PSOP2(Setting setting, DatasetP2Generator3 generator)
     {
@@ -119,7 +119,7 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
         //this.initializeLogger();
     }
 
-    private void initializeLogger()
+    @SuppressWarnings("unused") private void initializeLogger()
     {
         this.logger = LogManager.getLogger(PSOP2.class);
         this.logBuffers = new StringBuilder[this.lesson_pool.length];
@@ -155,9 +155,10 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
             executor.execute(particle::assignPBest);
         }
         executor.shutdown();
+        //noinspection StatementWithEmptyBody
         while(!executor.isTerminated())
         {
-            ;
+
         }
     }
 
@@ -188,48 +189,41 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
             });
         }
         executor.shutdown();
+        //noinspection StatementWithEmptyBody
         while(!executor.isTerminated())
         {
-            ;
+
         }
     }
 
+    /**
+     * Thread Pool Executor     : 4 core  | 10 pool   | 10ms    | 10 particle   | 50000 iter    = ~2m 19s 655ms LinkedBlockedQueue
+     * Thread Pool Executor     : 4 core  | 10 pool   | 50ms    | 10 particle   | 50000 iter    = ~2m 17s ---ms ArrayBlockedQueue
+     * Thread Pool Executor     : 4 core  | 10 pool   | 5ms     | 10 particle   | 50000 iter    = ~2m 24s 655ms LinkedBlockedQueue
+     * Thread Pool Executor     : 3 core  | 10 pool   | 10ms    | 10 particle   | 50000 iter    = ~2m 0s  636ms LinkedBlockedQueue
+     * Thread Pool Executor     : 3 core  | 10 pool   | 10ms    | 10 particle   | 50000 iter    = ~1m 54s 471ms ArrayBlockedQueue
+     * Thread Pool Executor     : 3 core  | 10 pool   | 50ms    | 10 particle   | 50000 iter    = ~1m 53s 52ms  ArrayBlockedQueue
+     * Thread Pool Executor     : 2 core  | 10 pool   | 50ms    | 10 particle   | 50000 iter    = ~2m 12s 381ms  ArrayBlockedQueue
+     * Thread Pool Executor     : 1 core  | 10 pool   | 50ms    | 10 particle   | 50000 iter    = ~3m 09s 109ms  ArrayBlockedQueue
+     * <p>
+     * Cached Thread Pool       : 0 core  | 2^31      | 1m      | 10 particle   | 50000 iter    = ~2m 53s 899ms
+     * No Thread                : 1 core  | 1 pool    |   ~     | 10 particle   | 50000 iter    = ~3m 10s 194ms
+     */
     @Override
     public void updateSwarmFitness()
     {
-        /*
-         * Thread Pool Executor     : 4 core  | 10 pool   | 10ms    | 10 particle   | 50000 iter    = ~2m 19s 655ms LinkedBlockedQueue
-         * Thread Pool Executor     : 4 core  | 10 pool   | 50ms    | 10 particle   | 50000 iter    = ~2m 17s ---ms ArrayBlockedQueue
-         * Thread Pool Executor     : 4 core  | 10 pool   | 5ms     | 10 particle   | 50000 iter    = ~2m 24s 655ms LinkedBlockedQueue
-         * Thread Pool Executor     : 3 core  | 10 pool   | 10ms    | 10 particle   | 50000 iter    = ~2m 0s  636ms LinkedBlockedQueue
-         * Thread Pool Executor     : 3 core  | 10 pool   | 10ms    | 10 particle   | 50000 iter    = ~1m 54s 471ms ArrayBlockedQueue
-         * Thread Pool Executor     : 3 core  | 10 pool   | 50ms    | 10 particle   | 50000 iter    = ~1m 53s 52ms  ArrayBlockedQueue
-         * Thread Pool Executor     : 2 core  | 10 pool   | 50ms    | 10 particle   | 50000 iter    = ~2m 12s 381ms  ArrayBlockedQueue
-         * Thread Pool Executor     : 1 core  | 10 pool   | 50ms    | 10 particle   | 50000 iter    = ~3m 09s 109ms  ArrayBlockedQueue
-         *
-         * Cached Thread Pool       : 0 core  | 2^31      | 1m      | 10 particle   | 50000 iter    = ~2m 53s 899ms
-         * No Thread                : 1 core  | 1 pool    |   ~     | 10 particle   | 50000 iter    = ~3m 10s 194ms
-         * */
-        //ArrayBlockingQueue<Runnable> tmpQueue = new ArrayBlockingQueue<Runnable>()
-
-        //ThreadPoolExecutor executor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), setting.max_particles, 10, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
-        //ThreadPoolExecutor executor = new ThreadPoolExecutor(3, setting.max_particles, 10, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(this.setting.max_particles), new ThreadPoolExecutor.CallerRunsPolicy());
-        //ThreadPoolExecutor executor = new ThreadPoolExecutor(3, setting.max_particles, 50, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(setting.max_particles));
         final ThreadPoolExecutor executor = this.generatePoolExecutor(this.max_core_allowed, this.max_pool_allowed, 10, TimeUnit.MILLISECONDS);
         executor.allowCoreThreadTimeOut(true);
-        //ThreadPoolExecutor executor = new ThreadPoolExecutor(setting.max_particles, setting.max_particles, 10, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
-        //executor.allowCoreThreadTimeOut(true);
-        //ExecutorService executor = Executors.newCachedThreadPool();
-        //executor.execute();
 
         for(ParticleP2 particle : super.particles)
         {
             executor.execute(() -> this.calculateFitness(particle));
         }
         executor.shutdown();
+        //noinspection StatementWithEmptyBody
         while(!executor.isTerminated())
         {
-            ;
+
         }
     }
 
@@ -318,6 +312,7 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                                 {
                                     lesson_conflicts.add(lesson_conflict);
                                 }
+
                                 try
                                 {
                                     lesson = this.lessons[lesson_id[++lesson_counter]];
@@ -346,275 +341,18 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
         data.placement_properties.resetPlacement();
     }
 
-    /**
-     * Index    :   Description
-     * 0   : Total Fitness
-     * 1   : Fitness Constraint 1
-     * 2   : Fitness Constraint 2
-     * 3   : Fitness Constraint 3
-     * 4   : Fitness Constraint 4
-     * 5   : Fitness Constraint 5
-     * 6   : Fitness Constraint 6
-     * 7   : Fitness Constraint 7
-     * 8   : Fitness Constraint 8
-     * 9   : Lesson ID
-     *
-     * @param data Particle Data
-     * @return Fitness Data
-     */
-    @SuppressWarnings({"unused", "ConstantConditions"}) public DoubleArrayList[][][] visualizeScheduleByFitness(ParticleP2 data)
-    {
-        final TimeoffPlacement[]    lecture_placement = data.placement_properties.lecture_placement;
-        final TimeoffPlacement[]    class_placement   = data.placement_properties.class_placement;
-        final IntHList              lecture_fill      = data.placement_properties.lecture_fill;
-        final IntHList              class_fill        = data.placement_properties.class_fill;
-        final DoubleArrayList[][][] container         = new DoubleArrayList[this.classrooms.length][this.active_days.length][];
-        double[]                    fitness           = new double[8];
-
-        int pool_index = -1;
-        for(final LessonPoolSet lesson_pool : this.lesson_pool)
-        {
-            final Int2IntLinkedOpenHashMap classroom_decoder = lesson_pool.clustered_classroom_decoder;
-            final int[]                    lesson_id         = gBest.positions[++pool_index].position;
-
-            int    lesson_counter = -1;
-            Lesson lesson         = this.lessons[lesson_id[++lesson_counter]];
-            int    lesson_sks     = lesson.sks;
-            int    current_sks    = 0;
-
-            for(final int classroom : lesson_pool.classrooms)
-            {
-                int day_index = -1;
-                for(double[] day : lesson_pool.classroom_timeoff[classroom].timeoff)
-                {
-                    final DoubleArrayList[] temp_container = new DoubleArrayList[10];
-                    for(int constraint_index = -1, constraint_size = 10; ++constraint_index < constraint_size; )
-                    {
-                        temp_container[constraint_index] = new DoubleArrayList(this.active_periods.length);
-                    }
-
-                    ++day_index;
-                    int period_index = -1;
-                    for(final double period : day)
-                    {
-                        ++period_index;
-                        if(period != 0.2)
-                        {
-                            if(lesson.subject == -1)
-                            {
-                                for(int constraint_index = -1, constraint_size = 8; ++constraint_index < constraint_size; )
-                                {
-                                    temp_container[constraint_index].add(-1.);
-                                }
-                                temp_container[8].add(5);
-                                temp_container[9].add(-1);
-                                lecture_fill.add(-1);
-                                class_fill.add(-1);
-                            }
-                            else
-                            {
-                                fitness[0] = (.02 * (this.subjects[lesson.subject].timeoff[day_index][period_index]));
-                                fitness[1] = (1 * (lesson.lecture == -1 ? 10 : (this.lecturers[lesson.lecture].timeoff[day_index][period_index])));
-                                fitness[2] = (.04 * (this.classes[lesson.clazz].timeoff[day_index][period_index]));
-                                fitness[3] = (0.001 * period); // classroom timeoff
-                                fitness[4] = (5 * (lesson.lecture == -1 ? 10 : (lecture_placement[lesson.lecture].putPlacementIfAbset(day_index, period_index, lesson_id[lesson_counter]) ? 10 : 0.1)));
-                                fitness[5] = (5 * (lesson.clazz == -1 ? 10 : (class_placement[lesson.clazz].putPlacementIfAbset(day_index, period_index, lesson_id[lesson_counter]) ? 10 : 0.1)));
-                                fitness[6] = (3 * (lesson.link.length == 0 ? 10 : class_placement[lesson.clazz].isNotTheSameDay(day_index, lesson.link) ? 10 : 0.1));
-                                fitness[7] = (.5 * (lesson.allowed_classroom[classroom] ? 10 : 0.1));
-
-
-                                for(int constraint_index = 0, constraint_size = 9; ++constraint_index < constraint_size; )
-                                {
-                                    temp_container[constraint_index].add(fitness[constraint_index - 1]);
-                                }
-                                temp_container[0].add(Arrays.stream(fitness).sum());
-                                temp_container[9].add(lesson_id[lesson_counter]);
-
-                                lecture_fill.add(lesson.lecture);
-                                class_fill.add(lesson.clazz);
-                            }
-
-                            if(++current_sks == lesson_sks)
-                            {
-                                try
-                                {
-                                    lesson = this.lessons[lesson_id[++lesson_counter]];
-                                }
-                                catch(ArrayIndexOutOfBoundsException ignored)
-                                {
-                                }
-                                finally
-                                {
-                                    lesson_sks = lesson.sks;
-                                    current_sks = 0;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            lecture_fill.add(-1);
-                            class_fill.add(-1);
-                            for(int constraint_index = -1, constraint_size = 10; ++constraint_index < constraint_size; )
-                            {
-                                temp_container[constraint_index].add(-1.);
-                            }
-                        }
-                    }
-                    container[classroom_decoder.get(classroom)][day_index] = temp_container;
-                }
-            }
-        }
-        data.placement_properties.resetPlacement();
-        for(int classroom_index = -1, classroom_length = this.classrooms.length; ++classroom_index < classroom_length; )
-        {
-            for(final int day : active_days)
-            {
-                if(container[classroom_index][day] == null)
-                {
-                    final DoubleArrayList[] temp_container = new DoubleArrayList[10];
-                    for(int constraint_index = -1, constraint_size = 10; ++constraint_index < constraint_size; )
-                    {
-                        temp_container[constraint_index] = new DoubleArrayList(this.active_periods.length);
-                        for(final int period : active_periods)
-                        {
-                            temp_container[constraint_index].add(-1);
-                        }
-                    }
-                    container[classroom_index][day] = temp_container;
-                }
-            }
-        }
-        return container;
-    }
-
-    /**
-     * Index    :   Description
-     * 0   : Lesson ID
-     * 1   : Lesson Subject
-     * 2   : Lesson Class
-     * 3   : Lesson Lecture
-     * 4   : Lesson Classroom
-     *
-     * @param data Particle Data
-     * @return Fitness Data
-     */
-    @SuppressWarnings("unused") public IntArrayList[][][] visualizeScheduleByComponents(ParticleP2 data)
-    {
-        IntArrayList[][][] container = new IntArrayList[this.classrooms.length][this.active_days.length][];
-
-        int pool_index = -1;
-        for(final LessonPoolSet lesson_pool : this.lesson_pool)
-        {
-            final Int2IntLinkedOpenHashMap classroom_decoder = lesson_pool.clustered_classroom_decoder;
-            final int[]                    lesson_id         = gBest.positions[++pool_index].position;
-
-            int    lesson_counter = -1;
-            Lesson lesson         = this.lessons[lesson_id[++lesson_counter]];
-            int    lesson_sks     = lesson.sks;
-            int    current_sks    = 0;
-
-            for(final int classroom : lesson_pool.classrooms)
-            {
-                int day_index = -1;
-                for(final double[] day : lesson_pool.classroom_timeoff[classroom].timeoff)
-                {
-                    final IntArrayList[] temp_container = new IntArrayList[5];
-                    for(int constraint_index = -1, constraint_size = 5; ++constraint_index < constraint_size; )
-                    {
-                        temp_container[constraint_index] = new IntArrayList(this.active_periods.length);
-                    }
-
-                    ++day_index;
-                    for(final double period : day)
-                    {
-                        if(period != 0.2)
-                        {
-                            if(lesson.subject == -1)
-                            {
-                                for(int constraint_index = -1, constraint_size = 5; ++constraint_index < constraint_size; )
-                                {
-                                    temp_container[constraint_index].add(-1);
-                                }
-                            }
-                            else
-                            {
-                                temp_container[0].add(lesson_id[lesson_counter]);
-                                temp_container[1].add(lesson.subject);
-                                temp_container[2].add(lesson.clazz);
-                                temp_container[3].add(lesson.lecture);
-                                temp_container[4].add(classroom_decoder.get(classroom));
-                            }
-
-                            if(++current_sks == lesson_sks)
-                            {
-                                try
-                                {
-                                    lesson = this.lessons[lesson_id[++lesson_counter]];
-                                }
-                                catch(ArrayIndexOutOfBoundsException ignored)
-                                {
-                                }
-                                finally
-                                {
-                                    lesson_sks = lesson.sks;
-                                    current_sks = 0;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            for(int constraint_index = -1, constraint_size = 5; ++constraint_index < constraint_size; )
-                            {
-                                temp_container[constraint_index].add(-1);
-                            }
-                        }
-                    }
-                    container[classroom_decoder.get(classroom)][day_index] = temp_container;
-                }
-            }
-        }
-        for(int classroom_index = -1, classroom_length = this.classrooms.length; ++classroom_index < classroom_length; )
-        {
-            for(final int day : active_days)
-            {
-                if(container[classroom_index][day] == null)
-                {
-                    final IntArrayList[] temp_container = new IntArrayList[5];
-                    for(int constraint_index = -1, constraint_size = 5; ++constraint_index < constraint_size; )
-                    {
-                        temp_container[constraint_index] = new IntArrayList(this.active_periods.length);
-                        for(final int period : active_periods)
-                        {
-                            temp_container[constraint_index].add(-1);
-                        }
-                    }
-                    container[classroom_index][day] = temp_container;
-                }
-            }
-        }
-        return container;
-    }
-
-    /**
-     * This is for random method stress testing, to check lesson placement according to classroom placement
-     *
-     * @param data : Particle's data
-     */
-    public void repairDataForClassroomPlacement(ParticleP2 data)
-    {
-        this.random(data.velocity_properties.rand_properties, data.velocity_properties.prand);
-        for(int pool_index = -1, pool_size = this.lesson_pool.length; ++pool_index < pool_size; )
-        {
-            Position.replace(data.data.positions[pool_index], data.velocity_properties.prand[pool_index]);
-        }
-    }
-
     @SuppressWarnings("Duplicates")
     @Override
     public void repairData(ParticleP2 data)
     {
         int         pool_index  = -1;
         final int[] active_days = this.active_days;
+
+        for(RepairProperties properties : data.repair_properties)
+        {
+            properties.resetAbsent();
+        }
+
         /*
         * For all available lesson pool
         * */
@@ -1080,11 +818,6 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                 this.random(data.velocity_properties.rand_properties, data.velocity_properties.prand, pool_index);
                 Position.replace(data.data.positions[pool_index], data.velocity_properties.prand[pool_index]);
             }
-        }
-
-        for(RepairProperties properties : data.repair_properties)
-        {
-            properties.resetAbsent();
         }
     }
 
@@ -1865,5 +1598,268 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
     private int getLessonWindow(final int total, final int classroom_length)
     {
         return (int) Math.ceil(total * 1f / classroom_length / this.active_days.length);
+    }
+
+    /**
+     * Index    :   Description
+     * 0   : Total Fitness
+     * 1   : Fitness Constraint 1
+     * 2   : Fitness Constraint 2
+     * 3   : Fitness Constraint 3
+     * 4   : Fitness Constraint 4
+     * 5   : Fitness Constraint 5
+     * 6   : Fitness Constraint 6
+     * 7   : Fitness Constraint 7
+     * 8   : Fitness Constraint 8
+     * 9   : Lesson ID
+     *
+     * @param data Particle Data
+     * @return Fitness Data
+     */
+    @SuppressWarnings({"unused", "ConstantConditions"}) public DoubleArrayList[][][] visualizeScheduleByFitness(ParticleP2 data)
+    {
+        final TimeoffPlacement[]    lecture_placement = data.placement_properties.lecture_placement;
+        final TimeoffPlacement[]    class_placement   = data.placement_properties.class_placement;
+        final IntHList              lecture_fill      = data.placement_properties.lecture_fill;
+        final IntHList              class_fill        = data.placement_properties.class_fill;
+        final DoubleArrayList[][][] container         = new DoubleArrayList[this.classrooms.length][this.active_days.length][];
+        double[]                    fitness           = new double[8];
+
+        int pool_index = -1;
+        for(final LessonPoolSet lesson_pool : this.lesson_pool)
+        {
+            final Int2IntLinkedOpenHashMap classroom_decoder = lesson_pool.clustered_classroom_decoder;
+            final int[]                    lesson_id         = gBest.positions[++pool_index].position;
+
+            int    lesson_counter = -1;
+            Lesson lesson         = this.lessons[lesson_id[++lesson_counter]];
+            int    lesson_sks     = lesson.sks;
+            int    current_sks    = 0;
+
+            for(final int classroom : lesson_pool.classrooms)
+            {
+                int day_index = -1;
+                for(double[] day : lesson_pool.classroom_timeoff[classroom].timeoff)
+                {
+                    final DoubleArrayList[] temp_container = new DoubleArrayList[10];
+                    for(int constraint_index = -1, constraint_size = 10; ++constraint_index < constraint_size; )
+                    {
+                        temp_container[constraint_index] = new DoubleArrayList(this.active_periods.length);
+                    }
+
+                    ++day_index;
+                    int period_index = -1;
+                    for(final double period : day)
+                    {
+                        ++period_index;
+                        if(period != 0.2)
+                        {
+                            if(lesson.subject == -1)
+                            {
+                                for(int constraint_index = -1, constraint_size = 8; ++constraint_index < constraint_size; )
+                                {
+                                    temp_container[constraint_index].add(-1.);
+                                }
+                                temp_container[8].add(5);
+                                temp_container[9].add(-1);
+                                lecture_fill.add(-1);
+                                class_fill.add(-1);
+                            }
+                            else
+                            {
+                                fitness[0] = (.02 * (this.subjects[lesson.subject].timeoff[day_index][period_index]));
+                                fitness[1] = (1 * (lesson.lecture == -1 ? 10 : (this.lecturers[lesson.lecture].timeoff[day_index][period_index])));
+                                fitness[2] = (.04 * (this.classes[lesson.clazz].timeoff[day_index][period_index]));
+                                fitness[3] = (0.001 * period); // classroom timeoff
+                                fitness[4] = (5 * (lesson.lecture == -1 ? 10 : (lecture_placement[lesson.lecture].putPlacementIfAbset(day_index, period_index, lesson_id[lesson_counter]) ? 10 : 0.1)));
+                                fitness[5] = (5 * (lesson.clazz == -1 ? 10 : (class_placement[lesson.clazz].putPlacementIfAbset(day_index, period_index, lesson_id[lesson_counter]) ? 10 : 0.1)));
+                                fitness[6] = (3 * (lesson.link.length == 0 ? 10 : class_placement[lesson.clazz].isNotTheSameDay(day_index, lesson.link) ? 10 : 0.1));
+                                fitness[7] = (.5 * (lesson.allowed_classroom[classroom] ? 10 : 0.1));
+
+
+                                for(int constraint_index = 0, constraint_size = 9; ++constraint_index < constraint_size; )
+                                {
+                                    temp_container[constraint_index].add(fitness[constraint_index - 1]);
+                                }
+                                temp_container[0].add(Arrays.stream(fitness).sum());
+                                temp_container[9].add(lesson_id[lesson_counter]);
+
+                                lecture_fill.add(lesson.lecture);
+                                class_fill.add(lesson.clazz);
+                            }
+
+                            if(++current_sks == lesson_sks)
+                            {
+                                try
+                                {
+                                    lesson = this.lessons[lesson_id[++lesson_counter]];
+                                }
+                                catch(ArrayIndexOutOfBoundsException ignored)
+                                {
+                                }
+                                finally
+                                {
+                                    lesson_sks = lesson.sks;
+                                    current_sks = 0;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            lecture_fill.add(-1);
+                            class_fill.add(-1);
+                            for(int constraint_index = -1, constraint_size = 10; ++constraint_index < constraint_size; )
+                            {
+                                temp_container[constraint_index].add(-1.);
+                            }
+                        }
+                    }
+                    container[classroom_decoder.get(classroom)][day_index] = temp_container;
+                }
+            }
+        }
+        data.placement_properties.resetPlacement();
+        for(int classroom_index = -1, classroom_length = this.classrooms.length; ++classroom_index < classroom_length; )
+        {
+            for(final int day : active_days)
+            {
+                if(container[classroom_index][day] == null)
+                {
+                    final DoubleArrayList[] temp_container = new DoubleArrayList[10];
+                    for(int constraint_index = -1, constraint_size = 10; ++constraint_index < constraint_size; )
+                    {
+                        temp_container[constraint_index] = new DoubleArrayList(this.active_periods.length);
+                        for(final int period : active_periods)
+                        {
+                            temp_container[constraint_index].add(-1);
+                        }
+                    }
+                    container[classroom_index][day] = temp_container;
+                }
+            }
+        }
+        return container;
+    }
+
+    /**
+     * Index    :   Description
+     * 0   : Lesson ID
+     * 1   : Lesson Subject
+     * 2   : Lesson Class
+     * 3   : Lesson Lecture
+     * 4   : Lesson Classroom
+     *
+     * @param data Particle Data
+     * @return Fitness Data
+     */
+    @SuppressWarnings("unused") public IntArrayList[][][] visualizeScheduleByComponents(ParticleP2 data)
+    {
+        IntArrayList[][][] container = new IntArrayList[this.classrooms.length][this.active_days.length][];
+
+        int pool_index = -1;
+        for(final LessonPoolSet lesson_pool : this.lesson_pool)
+        {
+            final Int2IntLinkedOpenHashMap classroom_decoder = lesson_pool.clustered_classroom_decoder;
+            final int[]                    lesson_id         = gBest.positions[++pool_index].position;
+
+            int    lesson_counter = -1;
+            Lesson lesson         = this.lessons[lesson_id[++lesson_counter]];
+            int    lesson_sks     = lesson.sks;
+            int    current_sks    = 0;
+
+            for(final int classroom : lesson_pool.classrooms)
+            {
+                int day_index = -1;
+                for(final double[] day : lesson_pool.classroom_timeoff[classroom].timeoff)
+                {
+                    final IntArrayList[] temp_container = new IntArrayList[5];
+                    for(int constraint_index = -1, constraint_size = 5; ++constraint_index < constraint_size; )
+                    {
+                        temp_container[constraint_index] = new IntArrayList(this.active_periods.length);
+                    }
+
+                    ++day_index;
+                    for(final double period : day)
+                    {
+                        if(period != 0.2)
+                        {
+                            if(lesson.subject == -1)
+                            {
+                                for(int constraint_index = -1, constraint_size = 5; ++constraint_index < constraint_size; )
+                                {
+                                    temp_container[constraint_index].add(-1);
+                                }
+                            }
+                            else
+                            {
+                                temp_container[0].add(lesson_id[lesson_counter]);
+                                temp_container[1].add(lesson.subject);
+                                temp_container[2].add(lesson.clazz);
+                                temp_container[3].add(lesson.lecture);
+                                temp_container[4].add(classroom_decoder.get(classroom));
+                            }
+
+                            if(++current_sks == lesson_sks)
+                            {
+                                try
+                                {
+                                    lesson = this.lessons[lesson_id[++lesson_counter]];
+                                }
+                                catch(ArrayIndexOutOfBoundsException ignored)
+                                {
+                                }
+                                finally
+                                {
+                                    lesson_sks = lesson.sks;
+                                    current_sks = 0;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            for(int constraint_index = -1, constraint_size = 5; ++constraint_index < constraint_size; )
+                            {
+                                temp_container[constraint_index].add(-1);
+                            }
+                        }
+                    }
+                    container[classroom_decoder.get(classroom)][day_index] = temp_container;
+                }
+            }
+        }
+        for(int classroom_index = -1, classroom_length = this.classrooms.length; ++classroom_index < classroom_length; )
+        {
+            for(final int day : active_days)
+            {
+                if(container[classroom_index][day] == null)
+                {
+                    final IntArrayList[] temp_container = new IntArrayList[5];
+                    for(int constraint_index = -1, constraint_size = 5; ++constraint_index < constraint_size; )
+                    {
+                        temp_container[constraint_index] = new IntArrayList(this.active_periods.length);
+                        for(final int period : active_periods)
+                        {
+                            temp_container[constraint_index].add(-1);
+                        }
+                    }
+                    container[classroom_index][day] = temp_container;
+                }
+            }
+        }
+        return container;
+    }
+
+    /**
+     * This is for random method stress testing, to check lesson placement according to classroom placement
+     *
+     * @param data : Particle's data
+     */
+    public void repairDataForClassroomPlacement(ParticleP2 data)
+    {
+        this.random(data.velocity_properties.rand_properties, data.velocity_properties.prand);
+        for(int pool_index = -1, pool_size = this.lesson_pool.length; ++pool_index < pool_size; )
+        {
+            Position.replace(data.data.positions[pool_index], data.velocity_properties.prand[pool_index]);
+        }
     }
 }
