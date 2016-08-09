@@ -115,7 +115,6 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
         }
 
         this.initializeMultiprocessorCore();
-        //this.initializeInjectionOperator();
         //this.initializeLogger();
     }
 
@@ -152,7 +151,19 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
 
         for(final ParticleP2 particle : super.particles)
         {
-            executor.execute(particle::assignPBest);
+            executor.execute(() ->
+            {
+                particle.assignPBest();
+                if(particle.pBest.fitness >= particle.data.fitness)
+                {
+                    for(int i = 0, is = 10; ++i < is; )
+                    {
+                        this.repairData(particle);
+                        this.calculateFitness(particle);
+                        this.exchangeConflict(particle);
+                    }
+                }
+            });
         }
         executor.shutdown();
         //noinspection StatementWithEmptyBody
@@ -186,13 +197,15 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                 particle.updateData();
                 this.repairData(particle);
                 this.calculateFitness(particle);
+                //this.printRepairProperties(particle);
+                //this.printLessonConflict(particle);
+                //this.exchangeConflict(particle);
             });
         }
         executor.shutdown();
         //noinspection StatementWithEmptyBody
         while(!executor.isTerminated())
         {
-
         }
     }
 
@@ -256,8 +269,9 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
         int pool_index = -1;
         for(final LessonPoolSet lesson_pool : this.lesson_pool)
         {
-            final int[]    lesson_id        = data.data.positions[++pool_index].position;
-            final IntHList lesson_conflicts = data.lesson_conflicts[pool_index];
+            final int[]            lesson_id        = data.data.positions[++pool_index].position;
+            final IntHList         lesson_conflicts = data.lesson_conflicts[pool_index];
+            final RepairProperties repair_property  = data.repair_properties[pool_index];
 
             int    lesson_counter  = -1;
             Lesson lesson          = this.lessons[lesson_id[++lesson_counter]];
@@ -273,6 +287,8 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                 for(final double[] day : lesson_pool.classroom_timeoff[classroom].timeoff)
                 {
                     ++day_index;
+                    repair_property.index[classroom][day_index] = lesson_counter;
+
                     int period_index = -1;
                     for(final double period : day)
                     {
@@ -343,7 +359,7 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
 
     @SuppressWarnings("Duplicates")
     @Override
-    public void repairData(ParticleP2 data)
+    public void repairData(final ParticleP2 data)
     {
         int         pool_index  = -1;
         final int[] active_days = this.active_days;
@@ -821,6 +837,92 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
         }
     }
 
+    private void exchangeConflict(final ParticleP2 particle)
+    {
+        particle.velocity_properties.initializeDloc(particle.data);
+        final double latest_fitness = particle.data.fitness;
+
+        boolean need_change = true;
+        for(int pool_index = -1, data_size = this.lesson_pool.length; (++pool_index < data_size) && need_change; )
+        {
+            if(particle.lesson_conflicts[pool_index].size() != 0)
+            {
+                need_change = false;
+
+                final int[]   lesson_index = particle.data.positions[pool_index].position;
+                final int[][] repair_index = particle.repair_properties[pool_index].index;
+                //final StringBuilder builder = this.logBuffers[pool_index];
+                //builder.append(String.format("Fitness : %g\n", particle.data.fitness));
+
+                final int    index_choosen    = particle.random.nextInt(particle.lesson_conflicts[pool_index].size());
+                final Lesson source_lesson    = this.lessons[lesson_index[index_choosen]];
+                int          source_classroom = 0;
+                for(int classroom_lookup = -1, classroom_size = repair_index.length; ++classroom_lookup < classroom_size; )
+                {
+                    if(index_choosen < repair_index[classroom_lookup][0])
+                    {
+                        source_classroom = classroom_lookup - 1;
+                    }
+                }
+                //builder.append(String.format("Source Classroom : %d\n", source_classroom));
+                //builder.append(String.format("Available Classroom : %s\n", Arrays.toString(source_lesson.available_classroom)));
+                try_exchange:
+                for(int try_index = -1, try_size = source_lesson.available_classroom.length; ++try_index < try_size; )
+                {
+                    final int try_classroom = source_lesson.available_classroom[particle.random.nextInt(source_lesson.available_classroom.length)];
+                    //builder.append(String.format("Try Classroom : %d\n", try_classroom));
+
+                    if(source_lesson.allowed_classroom[try_classroom])
+                    {
+                        for(int day_index : this.active_days)
+                        {
+                            int lookup_start = repair_index[try_classroom][0];
+                            int lookup_end;
+                            try
+                            {
+                                lookup_end = repair_index[try_classroom][day_index + 1] - 1;
+                            }
+                            catch(ArrayIndexOutOfBoundsException ignored)
+                            {
+                                try
+                                {
+                                    lookup_end = repair_index[try_classroom + 1][0] - 1;
+                                }
+                                catch(ArrayIndexOutOfBoundsException ignored1)
+                                {
+                                    lookup_end = lesson_index.length - 1;
+                                }
+                            }
+                            //builder.append(String.format("Lookup Start : %d\nLookup End   : %d\n", lookup_start, lookup_end));
+                            for(; lookup_start <= lookup_end; ++lookup_start)
+                            {
+                                final Lesson destination_lesson = this.lessons[lesson_index[lookup_start]];
+                                if((destination_lesson.sks == source_lesson.sks) && destination_lesson.allowed_classroom[source_classroom])
+                                {
+                                    final int index_temp = lesson_index[index_choosen];
+                                    lesson_index[index_choosen] = lesson_index[lookup_start];
+                                    lesson_index[lookup_start] = index_temp;
+                                    break try_exchange;
+                                }
+                            }
+                        }
+                    }
+                }
+                //builder.append(String.format("Fitness : %g\n", particle.data.fitness));
+                //this.logger.debug(builder.toString());
+            }
+        }
+
+        this.calculateFitness(particle);
+        if(particle.data.fitness < latest_fitness)
+        {
+            for(int pool_index = -1, data_size = this.lesson_pool.length; (++pool_index < data_size) && need_change; )
+            {
+                Position.replace(particle.data.positions[pool_index], particle.velocity_properties.dloc[pool_index]);
+            }
+        }
+    }
+
     private boolean exchangeAndReplace(int lookup_start, int lookup_end, int need, int remain, int current_classroom, int[] lesson_id, int lesson_counter, int[] time) throws Exception
     {
         boolean found            = false;
@@ -1141,22 +1243,6 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
     public boolean isConditionSatisfied()
     {
         return super.cEpoch == setting.max_epoch;
-        /*
-        * For Test Lesson Conflict
-        * */
-        /*if(super.cEpoch == setting.max_epochs)
-        {
-            for(final IntHList list : super.particles[0].lesson_conflicts)
-            {
-                System.out.println(list.toString());
-            }
-            System.out.println();
-            return true;
-        }
-        else
-        {
-            return false;
-        }*/
     }
 
     @Override
@@ -1860,6 +1946,64 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
         for(int pool_index = -1, pool_size = this.lesson_pool.length; ++pool_index < pool_size; )
         {
             Position.replace(data.data.positions[pool_index], data.velocity_properties.prand[pool_index]);
+        }
+    }
+
+
+    private void printLessonConflict(final ParticleP2 particle)
+    {
+        for(final IntHList list : particle.lesson_conflicts)
+        {
+            System.out.println(list.toString());
+        }
+        System.out.println();
+    }
+
+    private void printRepairProperties(final ParticleP2 particle)
+    {
+        int repair_index = -1;
+        for(final RepairProperties properties : particle.repair_properties)
+        {
+            ++repair_index;
+
+            System.out.println(Arrays.toString(particle.data.positions[repair_index].position));
+
+            int classroom_index = -1;
+            for(final int[] classroom : properties.index)
+            {
+                System.out.println(Arrays.toString(classroom));
+                ++classroom_index;
+
+                int day_index = -1;
+                for(int day_start : classroom)
+                {
+                    ++day_index;
+
+                    int day_end;
+                    try
+                    {
+                        day_end = classroom[day_index + 1] - 1;
+                    }
+                    catch(ArrayIndexOutOfBoundsException ignored)
+                    {
+                        try
+                        {
+                            day_end = properties.index[classroom_index + 1][0] - 1;
+                        }
+                        catch(ArrayIndexOutOfBoundsException ignored1)
+                        {
+                            day_end = particle.data.positions[repair_index].position.length - 1;
+                        }
+                    }
+                    for(; day_start <= day_end; ++day_start)
+                    {
+                        System.out.printf("%3d  ", particle.data.positions[repair_index].position[day_start]);
+                    }
+                    System.out.printf("\t");
+                }
+                System.out.println();
+            }
+            System.out.println();
         }
     }
 }
