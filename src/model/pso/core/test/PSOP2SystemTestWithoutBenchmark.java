@@ -41,7 +41,7 @@ public class PSOP2SystemTestWithoutBenchmark
     }
 
     @Test
-    public void testSystemWithBenchmark()
+    public void testSystemWithBenchmarkOriginal()
     {
         this.setting.bglob_min = 0.4;
         this.setting.bglob_max = 0.6;
@@ -57,8 +57,6 @@ public class PSOP2SystemTestWithoutBenchmark
         this.pso = new PSOP2(this.setting, this.gen);
         this.doCalculateWithMultithread(pso);
         System.out.println(pso.gBest.fitness);
-        //pso.doExchange();
-        //System.out.println(pso.gBest.fitness);
     }
 
     @Test
