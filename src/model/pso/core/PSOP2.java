@@ -47,20 +47,20 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
     public final Setting setting;
 
     //Dataset
-    public final int       school;
-    public final int[]     active_days;
-    public final int[]     active_periods;
-    public final Timeoff[] classes;
-    public final Timeoff[] classrooms;
-    public final Timeoff[] lecturers;
-    public final Timeoff[] subjects;
-    public final Lesson[]  lessons;
-    public final int[][][] classroom_available_time;
-    public final int[]     sks_distribution;
-
+    public final  int                         school;
+    public final  int[]                       active_days;
+    public final  int[]                       active_periods;
+    public final  Timeoff[]                   classes;
+    public final  Timeoff[]                   classrooms;
+    public final  Timeoff[]                   lecturers;
+    public final  Timeoff[]                   subjects;
+    public final  Lesson[]                    lessons;
+    public final  int[][][]                   classroom_available_time;
+    public final  int[]                       sks_distribution;
     //Working Set
     public final  LessonGroupSet[]            lesson_set;
     public final  LessonPoolSet[]             lesson_pool;
+    private final int[]                       shuffled_active_days;
     private final ScheduleShufflingProperties shuffling_properties;
 
     //Converter
@@ -84,6 +84,7 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
         //Generate Dataset
         this.school = dataset.school;
         this.active_days = dataset.active_days;
+        this.shuffled_active_days = IntArrays.copy(this.active_days);
         this.active_periods = dataset.active_periods;
         this.classes = dataset.classes;
         this.classrooms = dataset.classrooms;
@@ -151,19 +152,7 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
 
         for(final ParticleP2 particle : super.particles)
         {
-            executor.execute(() ->
-            {
-                particle.assignPBest();
-                if(particle.pBest.fitness >= particle.data.fitness)
-                {
-                    for(int i = 0, is = 10; ++i < is; )
-                    {
-                        this.repairData(particle);
-                        this.calculateFitness(particle);
-                        this.exchangeConflict(particle);
-                    }
-                }
-            });
+            executor.execute(particle::assignPBest);
         }
         executor.shutdown();
         //noinspection StatementWithEmptyBody
@@ -187,7 +176,7 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
     public void evaluateAllParticleWithMultiProcessor()
     {
         final ThreadPoolExecutor executor = this.generatePoolExecutor(this.max_core_allowed, this.max_pool_allowed, 10, TimeUnit.MILLISECONDS);
-        executor.allowCoreThreadTimeOut(true);
+        //executor.allowCoreThreadTimeOut(true);
 
         for(final ParticleP2 particle : super.particles)
         {
@@ -197,9 +186,9 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                 particle.updateData();
                 this.repairData(particle);
                 this.calculateFitness(particle);
-                //this.printRepairProperties(particle);
-                //this.printLessonConflict(particle);
-                //this.exchangeConflict(particle);
+                /*this.printRepairProperties(particle);
+                this.printLessonConflict(particle);
+                this.exchangeConflict(particle);*/
             });
         }
         executor.shutdown();
@@ -248,12 +237,11 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
     @Override
     public void assignGBest()
     {
-        int best_index = 0;
         Arrays.sort(super.particles, ParticleP2.particlePbestFitnessDescComparator);
 
-        if(super.particles[best_index].pBest.fitness > super.gBest.fitness)
+        if(super.particles[0].pBest.fitness > super.gBest.fitness)
         {
-            Data.replaceData(super.gBest, super.particles[best_index].pBest);
+            Data.replaceData(super.gBest, super.particles[0].pBest);
         }
     }
 
@@ -837,13 +825,26 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
         }
     }
 
+    public void doExchange()
+    {
+        Data.replaceData(this.particles[0].data, this.gBest);
+        this.calculateFitness(this.particles[0]);
+        for(int i = -1, is = 10000; ++i < is; )
+        {
+            this.exchangeConflict(this.particles[0]);
+            this.calculateFitness(this.particles[0]);
+        }
+        this.updateAllParticlePBestWithMultiProcessor();
+        this.assignGBest();
+    }
+
     private void exchangeConflict(final ParticleP2 particle)
     {
         particle.velocity_properties.initializeDloc(particle.data);
         final double latest_fitness = particle.data.fitness;
 
         boolean need_change = true;
-        for(int pool_index = -1, data_size = this.lesson_pool.length; (++pool_index < data_size) && need_change; )
+        for(int pool_index = 3, data_size = this.lesson_pool.length; (++pool_index < data_size) && need_change; )
         {
             if(particle.lesson_conflicts[pool_index].size() != 0)
             {
@@ -874,7 +875,8 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
 
                     if(source_lesson.allowed_classroom[try_classroom])
                     {
-                        for(int day_index : this.active_days)
+                        IntArrays.shuffle(this.shuffled_active_days, particle.random);
+                        for(int day_index : this.shuffled_active_days)
                         {
                             int lookup_start = repair_index[try_classroom][0];
                             int lookup_end;
@@ -916,10 +918,7 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
         this.calculateFitness(particle);
         if(particle.data.fitness < latest_fitness)
         {
-            for(int pool_index = -1, data_size = this.lesson_pool.length; (++pool_index < data_size) && need_change; )
-            {
-                Position.replace(particle.data.positions[pool_index], particle.velocity_properties.dloc[pool_index]);
-            }
+            Data.replacePositon(particle.data.positions, particle.velocity_properties.dloc);
         }
     }
 
@@ -1948,7 +1947,6 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
             Position.replace(data.data.positions[pool_index], data.velocity_properties.prand[pool_index]);
         }
     }
-
 
     private void printLessonConflict(final ParticleP2 particle)
     {

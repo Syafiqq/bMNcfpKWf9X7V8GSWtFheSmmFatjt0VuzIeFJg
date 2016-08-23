@@ -50,35 +50,91 @@ public class PSOP2SystemTestWithoutBenchmark
         this.setting.brand_min = 0.001;
         this.setting.brand_max = 0.01;
         this.setting.total_core = 3;
-        this.setting.max_particle = 20;
+        this.setting.max_particle = 10;
         this.setting.max_epoch = 10000;
 
         this.generateDataset();
         this.pso = new PSOP2(this.setting, this.gen);
-        this.doCalculate(pso);
+        this.doCalculateWithMultithread(pso);
         System.out.println(pso.gBest.fitness);
+        //pso.doExchange();
+        //System.out.println(pso.gBest.fitness);
     }
 
     @Test
-    public void testSystemWithZeroGlob()
+    public void testSystemWithZeroGlobOneLoc()
     {
         this.setting.bglob_min = 0.0;
-        this.setting.bglob_max = 0.2;
+        this.setting.bglob_max = 0.0;
+        this.setting.bloc_min = 1;
+        this.setting.bloc_max = 1;
+        this.setting.brand_min = 0.001;
+        this.setting.brand_max = 0.01;
+        this.setting.total_core = 3;
+        this.setting.max_particle = 10;
+        this.setting.max_epoch = 10000;
+
+        this.generateDataset();
+        this.pso = new PSOP2(this.setting, this.gen);
+        this.doCalculateWithMultithread(pso);
+        System.out.println(pso.gBest.fitness);
+        pso.doExchange();
+    }
+
+    @Test
+    public void testSystemWithZeroGlobMultithread()
+    {
+        this.setting.bglob_min = 0.0;
+        this.setting.bglob_max = 0.0;
         this.setting.bloc_min = 0.7;
         this.setting.bloc_max = 0.9;
         this.setting.brand_min = 0.001;
         this.setting.brand_max = 0.01;
         this.setting.total_core = 3;
-        this.setting.max_particle = 20;
-        this.setting.max_epoch = 20000;
+        this.setting.max_particle = 40;
+        this.setting.max_epoch = 10000;
 
         this.generateDataset();
         this.pso = new PSOP2(this.setting, this.gen);
-        this.doCalculate(pso);
+        this.doCalculateWithMultithread(pso);
         System.out.println(pso.gBest.fitness);
+        pso.doExchange();
     }
 
-    private void doCalculate(final PSOP2 pso)
+    @Test
+    public void testSystemWithZeroGlobNoMultithread()
+    {
+        this.setting.bglob_min = 0.0;
+        this.setting.bglob_max = 0.0;
+        this.setting.bloc_min = 0.7;
+        this.setting.bloc_max = 0.9;
+        this.setting.brand_min = 0.001;
+        this.setting.brand_max = 0.01;
+        this.setting.total_core = 3;
+        this.setting.max_particle = 40;
+        this.setting.max_epoch = 10000;
+
+        this.generateDataset();
+        this.pso = new PSOP2(this.setting, this.gen);
+        this.doCalculateWithoutMultithread(pso);
+        System.out.println(pso.gBest.fitness);
+        pso.doExchange();
+    }
+
+    private void doCalculateWithoutMultithread(final PSOP2 pso)
+    {
+        pso.initializeSwarm();
+        pso.updateSwarmFitness();
+        while(!pso.isConditionSatisfied())
+        {
+            pso.updateAllParticlePBest();
+            pso.assignGBest();
+            pso.evaluateAllParticle();
+            pso.updateStoppingCondition();
+        }
+    }
+
+    private void doCalculateWithMultithread(final PSOP2 pso)
     {
         pso.initializeSwarm();
         pso.updateSwarmFitness();
@@ -106,7 +162,7 @@ public class PSOP2SystemTestWithoutBenchmark
 
         this.generateDataset();
         this.pso = new PSOP2(this.setting, this.gen);
-        this.doCalculate(pso);
+        this.doCalculateWithMultithread(pso);
         System.out.println(pso.gBest.fitness);
     }
 }
