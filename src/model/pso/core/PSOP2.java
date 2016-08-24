@@ -840,11 +840,14 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
 
     private void exchangeConflict(final ParticleP2 particle)
     {
+        /*
+        * Backup current particle position
+        * */
         particle.velocity_properties.initializeDloc(particle.data);
         final double latest_fitness = particle.data.fitness;
 
         boolean need_change = true;
-        for(int pool_index = 3, data_size = this.lesson_pool.length; (++pool_index < data_size) && need_change; )
+        for(int pool_index = 0, data_size = this.lesson_pool.length; (++pool_index < data_size) && need_change; )
         {
             if(particle.lesson_conflicts[pool_index].size() != 0)
             {
