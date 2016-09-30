@@ -116,7 +116,7 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
         }
 
         this.initializeMultiprocessorCore();
-        //this.initializeLogger();
+        this.initializeLogger();
     }
 
     @SuppressWarnings("unused") private void initializeLogger()
@@ -271,18 +271,53 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
 
             for(final int classroom : lesson_pool.classrooms)
             {
+                final int[][] cls_available = lesson_pool.classroom_available_time[classroom];
+
                 int day_index = -1;
                 for(final double[] day : lesson_pool.classroom_timeoff[classroom].timeoff)
                 {
                     ++day_index;
+
+                    final int[] day_available = cls_available[day_index];
                     repair_property.index[classroom][day_index] = lesson_counter;
+
+                    int avl_cntr  = 0;
+                    int available = day_available[++avl_cntr];
 
                     int period_index = -1;
                     for(final double period : day)
                     {
                         ++period_index;
+
                         if(period != 0.2)
                         {
+                            if(available == period_index + 1)
+                            {
+                                if(current_sks + 1 != lesson_sks)
+                                {
+                                    System.out.println("available = " + available);
+                                    System.out.println("period_index = " + (period_index + 1));
+                                    System.out.println("current_sks = " + current_sks);
+                                    System.out.println("lesson_sks = " + lesson_sks);
+                                    System.out.println("pool_index = " + pool_index);
+                                    System.out.println("classroom = " + classroom);
+                                    System.out.println("day_index = " + day_index);
+                                    System.out.println("lesson_counter = " + (lesson_counter + 1));
+                                    System.out.println(data.data);
+                                    this.logger.debug(this.logBuffers[pool_index].toString());
+                                    System.exit(1);
+                                }
+                                else
+                                {
+                                    try
+                                    {
+                                        available += day_available[++avl_cntr];
+                                    }
+                                    catch(ArrayIndexOutOfBoundsException ignore)
+                                    {
+                                    }
+                                }
+                            }
                             if(lesson.subject == -1)
                             {
                                 lecture_fill.add(-1);
@@ -334,6 +369,7 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                         }
                         else
                         {
+                            ++available;
                             lecture_fill.add(-1);
                             class_fill.add(-1);
                         }
@@ -364,6 +400,9 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
         for(final LessonPoolSet lesson_pool : this.lesson_pool)
         {
             ++pool_index;
+
+            this.logBuffers[pool_index].setLength(0);
+            this.logBuffers[pool_index].append(data.data.positions[pool_index].toString());
             try
             {
                 final int[]            lesson_id         = data.data.positions[pool_index].position;
@@ -427,6 +466,14 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                                  * */
                                 else
                                 {
+                                    if(pool_index == 3 && lesson_id[lesson_counter] == 71)
+                                    {
+                                        System.out.println("current_sks = " + current_sks);
+                                        System.out.println("lesson.sks = " + lesson.sks);
+                                        System.out.println("time[time_index] = " + time[time_index]);
+                                        System.out.println("time = " + Arrays.toString(time));
+                                        System.exit(1);
+                                    }
                                     final int need   = time[time_index] - current_sks;
                                     boolean   change = false;
 

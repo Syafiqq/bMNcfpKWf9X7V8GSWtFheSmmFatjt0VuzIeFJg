@@ -8,6 +8,7 @@ import model.dataset.component.Timeoff;
 import model.dataset.core.Dataset2;
 import model.dataset.core.DatasetConverter;
 import model.dataset.core.WorkingSet;
+import model.pso.component.Data;
 import model.pso.component.Setting;
 import model.pso.core.PSOP2;
 import org.junit.Test;
@@ -59,6 +60,34 @@ public class PSOP2SystemTestWithoutBenchmark
         System.out.println(pso.gBest.fitness);
         //pso.doExchange();
         //System.out.println(pso.gBest.fitness);
+    }
+
+    @Test
+    public void testSystemForFixingRepair()
+    {
+        this.setting.bglob_min = 0.4;
+        this.setting.bglob_max = 0.6;
+        this.setting.bloc_min = 0.7;
+        this.setting.bloc_max = 0.9;
+        this.setting.brand_min = 0.001;
+        this.setting.brand_max = 0.01;
+        this.setting.total_core = 3;
+        this.setting.max_particle = 10;
+        this.setting.max_epoch = 5000;
+
+        this.generateDataset();
+        this.pso = new PSOP2(this.setting, this.gen);
+        this.doCalculateWithoutMultithread(pso);
+        System.out.println(pso.gBest.fitness);
+        System.out.printf("%g\t%g\n", pso.particles[0].data.fitness, pso.gBest.fitness);
+        Data.replaceData(pso.particles[0].data, pso.gBest);
+        pso.calculateFitness(pso.particles[0]);
+        System.out.printf("%g\t%g\n", pso.particles[0].data.fitness, pso.gBest.fitness);
+        System.out.println(pso.particles[0].data);
+        pso.repairData(pso.particles[0]);
+        pso.calculateFitness(pso.particles[0]);
+        System.out.printf("%g\t%g\n", pso.particles[0].data.fitness, pso.gBest.fitness);
+        System.out.println(pso.particles[0].data);
     }
 
     @Test
@@ -127,6 +156,7 @@ public class PSOP2SystemTestWithoutBenchmark
         pso.updateSwarmFitness();
         while(!pso.isConditionSatisfied())
         {
+            System.out.println(pso.cEpoch);
             pso.updateAllParticlePBest();
             pso.assignGBest();
             pso.evaluateAllParticle();
