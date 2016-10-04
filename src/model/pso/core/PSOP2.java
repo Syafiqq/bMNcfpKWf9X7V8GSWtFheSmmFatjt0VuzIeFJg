@@ -271,18 +271,18 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
 
             for(final int classroom : lesson_pool.classrooms)
             {
-                final int[][] cls_available = lesson_pool.classroom_available_time[classroom];
+                //final int[][] cls_available = lesson_pool.classroom_available_time[classroom];
 
                 int day_index = -1;
                 for(final double[] day : lesson_pool.classroom_timeoff[classroom].timeoff)
                 {
                     ++day_index;
 
-                    final int[] day_available = cls_available[day_index];
+                    //final int[] day_available = cls_available[day_index];
                     repair_property.index[classroom][day_index] = lesson_counter;
 
-                    int avl_cntr  = 0;
-                    int available = day_available[++avl_cntr];
+                    //int avl_cntr  = 0;
+                    //int available = day_available[++avl_cntr];
 
                     int period_index = -1;
                     for(final double period : day)
@@ -291,7 +291,7 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
 
                         if(period != 0.2)
                         {
-                            if(available == period_index + 1)
+                            /*if(available == period_index + 1)
                             {
                                 if(current_sks + 1 != lesson_sks)
                                 {
@@ -317,7 +317,7 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                                     {
                                     }
                                 }
-                            }
+                            }*/
                             if(lesson.subject == -1)
                             {
                                 lecture_fill.add(-1);
@@ -369,7 +369,7 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                         }
                         else
                         {
-                            ++available;
+                            //++available;
                             lecture_fill.add(-1);
                             class_fill.add(-1);
                         }
@@ -401,8 +401,8 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
         {
             ++pool_index;
 
-            this.logBuffers[pool_index].setLength(0);
-            this.logBuffers[pool_index].append(data.data.positions[pool_index].toString());
+            //this.logBuffers[pool_index].setLength(0);
+            //this.logBuffers[pool_index].append(data.data.positions[pool_index].toString());
             try
             {
                 final int[]            lesson_id         = data.data.positions[pool_index].position;
@@ -466,14 +466,14 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                                  * */
                                 else
                                 {
-                                    if(pool_index == 3 && lesson_id[lesson_counter] == 71)
+                                    /*if(pool_index == 3 && lesson_id[lesson_counter] == 71)
                                     {
                                         System.out.println("current_sks = " + current_sks);
                                         System.out.println("lesson.sks = " + lesson.sks);
                                         System.out.println("time[time_index] = " + time[time_index]);
                                         System.out.println("time = " + Arrays.toString(time));
                                         System.exit(1);
-                                    }
+                                    }*/
                                     final int need   = time[time_index] - current_sks;
                                     boolean   change = false;
 
