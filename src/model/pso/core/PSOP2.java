@@ -116,10 +116,10 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
         }
 
         this.initializeMultiprocessorCore();
-        this.initializeLogger();
+        //this.initializeLogger();
     }
 
-    @SuppressWarnings("unused") private void initializeLogger()
+    @SuppressWarnings("unused") public void initializeLogger()
     {
         this.logger = LogManager.getLogger(PSOP2.class);
         this.logBuffers = new StringBuilder[this.lesson_pool.length];
@@ -401,8 +401,6 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
         {
             ++pool_index;
 
-            //this.logBuffers[pool_index].setLength(0);
-            //this.logBuffers[pool_index].append(data.data.positions[pool_index].toString());
             try
             {
                 final int[]            lesson_id         = data.data.positions[pool_index].position;
@@ -437,7 +435,7 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                             if((lesson.allowed_classroom[classroom]) || (lesson.subject == -1))
                             {
                                 /*
-                                 * Check whether incoming sks + current sks less than cluster capacity
+                                 * Check whether incoming sks + current sks LESS than cluster capacity
                                  * */
                                 if((current_sks + lesson.sks) < time[time_index])
                                 {
@@ -466,14 +464,6 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                                  * */
                                 else
                                 {
-                                    /*if(pool_index == 3 && lesson_id[lesson_counter] == 71)
-                                    {
-                                        System.out.println("current_sks = " + current_sks);
-                                        System.out.println("lesson.sks = " + lesson.sks);
-                                        System.out.println("time[time_index] = " + time[time_index]);
-                                        System.out.println("time = " + Arrays.toString(time));
-                                        System.exit(1);
-                                    }*/
                                     final int need   = time[time_index] - current_sks;
                                     boolean   change = false;
 
@@ -512,6 +502,7 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                                             }
                                         }
 
+                                        // Addition : add function that check in possible classroom that completely equal like function block when lesson is not allowed
                                         /*
                                          * If function above fail, find lesson in all possible classrooms [search from its available classroom that already observed]
                                          * */
@@ -639,6 +630,11 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                             }
                             else
                             {
+                                /*
+                                * Why no lookup to allowed classroom that already discovered first ? <<< Next Issues
+                                * Well that depend on how many allowed classroom that already discovered
+                                * if none of allowed classroom is already discovered then this function block is skipped
+                                * */
                                 final int need   = time[time_index] - current_sks;
                                 boolean   change = false;
                                 /*
@@ -666,6 +662,9 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                                     /*
                                      * Lookup all its lesson available classroom
                                      * */
+                                    /*
+                                    * Try to shuffle available classroom first
+                                    * */
                                     lookup_replacement:
                                     for(int classroom_lookup : lesson.available_classroom)
                                     {
@@ -870,6 +869,18 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                 Position.replace(data.data.positions[pool_index], data.velocity_properties.prand[pool_index]);
             }
         }
+    }
+
+    private void printAvailableSKS(ParticleP2 suspect, int index)
+    {
+        for(final int lesson : suspect.data.positions[index].position)
+        {
+            for(int i = -1, is = this.lessons[lesson].sks; ++i < is; )
+            {
+                System.out.printf("%d\t", lesson);
+            }
+        }
+        System.out.println();
     }
 
     public void doExchange()
