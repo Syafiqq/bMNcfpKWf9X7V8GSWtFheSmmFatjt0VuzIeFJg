@@ -198,7 +198,7 @@ public class DatasetP2CheckerForPSORepair
         this.setting.max_epoch = 5000;
 
         this.pso = new PSOP2(this.setting, this.gen);
-        this.pso.initializeLogger();
+        //this.pso.initializeLogger();
         this.pso.initializeSwarm();
         this.pso.updateSwarmFitness();
         final ParticleP2 suspect    = pso.particles[0];
@@ -209,6 +209,12 @@ public class DatasetP2CheckerForPSORepair
         }
 
         this.pso.calculateFitness(suspect);
+        System.out.println(suspect.data.fitness);
         this.pso.repairData(suspect);
+        this.pso.calculateFitness(suspect);
+        System.out.println(suspect.data.fitness);
+        this.pso.repairData(suspect);
+        this.pso.calculateFitness(suspect);
+        System.out.println(suspect.data.fitness);
     }
 }

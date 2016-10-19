@@ -76,6 +76,9 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
     private int                          max_pool_allowed;
     private ArrayBlockingQueue<Runnable> thread_queue;
 
+    private int[]     debugOccurance;
+    private boolean[] debugOccuranceFlag;
+
     public PSOP2(Setting setting, DatasetP2Generator3 generator)
     {
         this.setting = setting;
@@ -117,6 +120,9 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
 
         this.initializeMultiprocessorCore();
         //this.initializeLogger();
+
+        this.debugOccurance = new int[100];
+        this.debugOccuranceFlag = new boolean[100];
     }
 
     @SuppressWarnings("unused") public void initializeLogger()
@@ -429,6 +435,12 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                         * */
                         for(int time_index = 1, time_size = time.length; time_index < time_size; )
                         {
+                            /*if((pool_index == 3) && (lesson_id[lesson_counter] == 3))
+                            {
+                                ++debugOccurance[0];
+                                //System.out.println("%d\t", lesson_id[lesson_counter]);
+                                this.printAvailableSKS(data, 3);
+                            }*/
                             /*
                             * Check whether current lesson is allowed in current classroom
                             * */
@@ -510,7 +522,33 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                                         {
                                             change = false;
                                             final int remain = lesson.sks - need;
-
+                                            /*if((pool_index == 3) && (lesson_id[lesson_counter] == 3) && false)
+                                            {
+                                                for(final int li : lesson_id)
+                                                {
+                                                    //System.out.println("%d\t",li);
+                                                }
+                                                //System.out.println();
+                                                for(final int li : lesson_id)
+                                                {
+                                                    //System.out.println("%d\t",this.lessons[li].sks);
+                                                }
+                                                //System.out.println();
+                                                int cnt = -1;
+                                                for(final int li : lesson_pool.classrooms)
+                                                {
+                                                    for(final int ld : this.active_days)
+                                                    {
+                                                        final int ll = repair_properties.index[li][ld];
+                                                        while(ll != ++cnt)
+                                                        {
+                                                            //System.out.println("\t");
+                                                        }
+                                                        //System.out.println("%d\t", ll);
+                                                    }
+                                                }
+                                                //System.out.println();
+                                            }*/
                                             /*
                                              * Lookup all its lesson available classroom
                                              * */
@@ -572,8 +610,24 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                                                         /*
                                                         * Try to replace lesson between specified bound
                                                         * */
+                                                        /*if((debugOccurance[0] == 2) && (pool_index == 3) && (lesson_id[lesson_counter] == 3))
+                                                        {
+                                                            debugOccuranceFlag[0] = true;
+                                                            //System.out.println("classroom_available_time = " + Arrays.toString(lesson_pool.classroom_available_time[classroom_lookup][day_lookup]));
+                                                            //System.out.println("lesson_id = " + Arrays.toString(lesson_id));*//*
+                                                        }
+                                                        else
+                                                        {
+                                                            debugOccuranceFlag[0] = false;
+                                                        }*/
                                                         if(this.exchangeAndReplace(lookup_start, lookup_end, need, remain, classroom, lesson_id, lesson_counter, lesson_pool.classroom_available_time[classroom_lookup][day_lookup]))
                                                         {
+                                                            /*if((debugOccurance[0] == 2) && debugOccuranceFlag[0] && (pool_index == 3))
+                                                            {
+                                                                //System.out.println(logBuffers[0]);
+                                                                //System.out.println("classroom_available_time = " + Arrays.toString(lesson_pool.classroom_available_time[classroom_lookup][day_lookup]));
+                                                                //System.out.println("lesson_id = " + Arrays.toString(lesson_id));*//*
+                                                            }*/
                                                             change = true;
                                                             /*
                                                             * Shift all cluster index
@@ -982,6 +1036,14 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
 
     private boolean exchangeAndReplace(int lookup_start, int lookup_end, int need, int remain, int current_classroom, int[] lesson_id, int lesson_counter, int[] time) throws Exception
     {
+        /*if((debugOccurance[0] == 2) && debugOccuranceFlag[0])
+        {
+            if(++debugOccurance[1] == 5 )
+            {
+                debugOccuranceFlag[1] = true;
+            }
+        }*/
+
         boolean found            = false;
         int     need_index       = -1;
         int     need_cluster     = -1;
@@ -1011,6 +1073,11 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
             }
         }
 
+        /*if((debugOccurance[1] == 5) && debugOccuranceFlag[1])
+        {
+            //System.out.println("%3d %3d %3d\n", need_index, lesson_id[need_index], need_cluster);
+        }*/
+
         /*
          * Find lesson that equals number of sks overflow and allowed each other if replace happened.
          * */
@@ -1037,6 +1104,11 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                 }
             }
         }
+
+        /*if((debugOccurance[1] == 5) && debugOccuranceFlag[1])
+        {
+            //System.out.println("%3d %3d %3d\n", overflow_index, lesson_id[overflow_index], overflow_cluster);
+        }*/
 
         /*
          * check if lesson need and lesson overflow has been found
@@ -1131,6 +1203,8 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
     {
         int          last_index_sks       = 0;
         int          cumulative_need_size = this.lessons[lesson_id[need_index]].sks + this.lessons[lesson_id[overflow_index]].sks;
+
+        //Priority Queue
         IntArrayList container            = new IntArrayList(lookup_end - lookup_start - 1);
         IntArrayList fuel                 = new IntArrayList(lookup_end - lookup_start - 2);
 
@@ -1160,6 +1234,7 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                 last_index_sks = lesson_sks;
             }
         }
+
         /*
         * Fill lesson need and overflow wrapped by -1 lesson
         * */
@@ -1171,6 +1246,15 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                 break;
             }
         }
+
+        /*if((debugOccurance[1] == 5) && debugOccuranceFlag[1])
+        {
+            for(final int f : fuel)
+            {
+                //System.out.println("%3d\t", f == -1 ? -1 : lesson_id[f]);
+            }
+            //System.out.println();
+        }*/
 
         /*
         * Fill container which fit each cluster
@@ -1202,6 +1286,8 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                 * */
                 if(temp_sks + current_sks <= time[time_index])
                 {
+                    current_sks += temp_sks;
+
                     if(fuel_lesson == -1)
                     {
                         /*
@@ -1227,7 +1313,7 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
                     /*
                     * Shift lesson cluster time
                     * */
-                    if(temp_sks + current_sks == time[time_index])
+                    if(current_sks == time[time_index])
                     {
                         ++time_index;
                         current_sks = 0;
@@ -1246,6 +1332,12 @@ public class PSOP2 extends PSOOperation<Data, Velocity[], ParticleP2> implements
             }
         }
         while(old_fuel_size != fuel.size());
+
+        /*if((debugOccurance[1] == 5) && debugOccuranceFlag[1])
+        {
+            //System.out.println(fuel.size());
+            //System.out.println(Arrays.toString(time));
+        }*/
 
         /*
         * Check if arrangement fits all lesson cluster
