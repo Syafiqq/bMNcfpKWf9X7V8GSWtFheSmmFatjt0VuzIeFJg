@@ -13,6 +13,7 @@ import model.pso.component.ParticleP2;
 import model.pso.component.Position;
 import model.pso.component.Setting;
 import model.pso.core.PSOP2;
+import org.junit.Assert;
 import org.junit.Test;
 
 /*
@@ -31,6 +32,17 @@ public class DatasetP2CheckerForPSORepair
     private DatasetConverter<Int2IntLinkedOpenHashMap> decoder;
     private DatasetP2Generator3                        gen;
     private PSOP2                                      pso;
+
+    @SuppressWarnings("Duplicates") public void generateDataset()
+    {
+        Main.getMyDatabaseAccount();
+        this.dataset = new Dataset2<>(1);
+        this.workingset = new WorkingSet();
+        this.encoder = new DatasetConverter<>();
+        this.decoder = new DatasetConverter<>();
+        this.gen = new DatasetP2Generator3(dataset, workingset, encoder, decoder);
+        gen.generateDataset();
+    }
 
     @SuppressWarnings("Duplicates") @Test public void CheckSKS()
     {
@@ -216,5 +228,123 @@ public class DatasetP2CheckerForPSORepair
         this.pso.repairData(suspect);
         this.pso.calculateFitness(suspect);
         System.out.println(suspect.data.fitness);
+    }
+
+    @Test public void testRepairWithAutomation()
+    {
+        this.setting.bglob_min = 0.4;
+        this.setting.bglob_max = 0.6;
+        this.setting.bloc_min = 0.7;
+        this.setting.bloc_max = 0.9;
+        this.setting.brand_min = 0.001;
+        this.setting.brand_max = 0.01;
+        this.setting.total_core = 3;
+        this.setting.max_particle = 10;
+        this.setting.max_epoch = 5000;
+
+        this.generateDataset();
+        this.pso = new PSOP2(this.setting, this.gen);
+        pso.initializeSwarm();
+        pso.updateSwarmFitness();
+        final int[][]    cnt = new int[5][];
+        final Position[] tp  = this.pso.particles[0].data.positions;
+        for(int i = -1, is = tp.length; ++i < is; )
+        {
+            cnt[i] = new int[tp[i].position.length];
+        }
+        while(!pso.isConditionSatisfied())
+        {
+            for(int i = -1, is = this.pso.particles.length; ++i < is; )
+            {
+                final ParticleP2 particle = this.pso.particles[i];
+                final Position[] ttp      = particle.data.positions;
+                final Position[] ttpb     = particle.pBest.positions;
+                final double     pB1      = particle.data.fitness;
+                for(int j = -1, js = tp.length; ++j < js; )
+                {
+                    System.arraycopy(ttp[j].position, 0, cnt[j], 0, ttp[j].position.length);
+                }
+                particle.assignPBest();
+                final double pB2 = particle.pBest.fitness;
+                for(int j = -1, js = tp.length; ++j < js; )
+                {
+                    System.arraycopy(ttpb[j].position, 0, ttp[j].position, 0, ttpb[j].position.length);
+                }
+                this.pso.calculateFitness(particle);
+                Assert.assertEquals(pB2, particle.data.fitness, 0);
+                for(int j = -1, js = 2; ++j < js; )
+                {
+                    this.pso.repairData(particle);
+                    this.pso.calculateFitness(particle);
+                    Assert.assertEquals(pB2, particle.data.fitness, 0);
+                }
+                for(int j = -1, js = tp.length; ++j < js; )
+                {
+                    System.arraycopy(cnt[j], 0, ttp[j].position, 0, cnt[j].length);
+                }
+                this.pso.calculateFitness(particle);
+                Assert.assertEquals(pB1, particle.data.fitness, 0);
+            }
+
+
+            final ParticleP2 ps   = this.pso.particles[0];
+            final Position[] ttp  = ps.data.positions;
+            final Position[] ttpb = this.pso.gBest.positions;
+            final double     pB1  = ps.data.fitness;
+            for(int j = -1, js = tp.length; ++j < js; )
+            {
+                System.arraycopy(ttp[j].position, 0, cnt[j], 0, ttp[j].position.length);
+            }
+            pso.assignGBest();
+            final double pB2 = this.pso.gBest.fitness;
+            for(int j = -1, js = tp.length; ++j < js; )
+            {
+                System.arraycopy(ttpb[j].position, 0, ttp[j].position, 0, ttpb[j].position.length);
+            }
+            this.pso.calculateFitness(ps);
+            Assert.assertEquals(pB2, ps.data.fitness, 0);
+            for(int j = -1, js = 2; ++j < js; )
+            {
+                this.pso.repairData(ps);
+                this.pso.calculateFitness(ps);
+                Assert.assertEquals(pB2, ps.data.fitness, 0);
+            }
+            for(int j = -1, js = tp.length; ++j < js; )
+            {
+                System.arraycopy(cnt[j], 0, ttp[j].position, 0, cnt[j].length);
+            }
+            this.pso.calculateFitness(ps);
+            Assert.assertEquals(pB1, ps.data.fitness, 0);
+
+
+            for(int i = -1, is = this.pso.particles.length; ++i < is; )
+            {
+                final ParticleP2 particle = this.pso.particles[i];
+                particle.calculateVelocity(this.pso.gBest, this.pso.cEpoch, this.setting.max_epoch);
+                particle.updateData();
+                this.pso.repairData(particle);
+                this.pso.calculateFitness(particle);
+                final Position[] ttp1 = particle.data.positions;
+                final double     pB11 = particle.data.fitness;
+                for(int j = -1, js = tp.length; ++j < js; )
+                {
+                    System.arraycopy(ttp1[j].position, 0, cnt[j], 0, ttp1[j].position.length);
+                }
+                Assert.assertEquals(pB11, particle.data.fitness, 0);
+                for(int j = -1, js = 2; ++j < js; )
+                {
+                    this.pso.repairData(particle);
+                    this.pso.calculateFitness(particle);
+                    Assert.assertEquals(pB11, particle.data.fitness, 0);
+                }
+                for(int j = -1, js = tp.length; ++j < js; )
+                {
+                    System.arraycopy(cnt[j], 0, ttp1[j].position, 0, cnt[j].length);
+                }
+                this.pso.calculateFitness(particle);
+                Assert.assertEquals(pB11, particle.data.fitness, 0);
+            }
+            pso.updateStoppingCondition();
+        }
     }
 }
